@@ -122,39 +122,24 @@ public class PersonaService {
      * @throws IllegalArgumentException se uno o più campi non sono validi
      */
     private void validatePersona(Persona persona) {
-        validateNome(persona.getNome());
-        validateCognome(persona.getCognome());
+        validateNameField(persona.getNome(), "nome");
+        validateNameField(persona.getCognome(), "cognome");
         validateTelefono(persona.getTelefono());
-        validateEta(persona.getEta());
     }
     
     /**
-     * Valida il nome della persona.
+     * Valida un campo nome/cognome generico.
      * 
-     * @param nome il nome da validare
-     * @throws IllegalArgumentException se il nome non è valido
+     * @param value il valore da validare
+     * @param fieldName il nome del campo per i messaggi di errore
+     * @throws IllegalArgumentException se il valore non è valido
      */
-    private void validateNome(String nome) {
-        if (nome.trim().length() > 100) {
-            throw new IllegalArgumentException("Il nome non può superare i 100 caratteri");
+    private void validateNameField(String value, String fieldName) {
+        if (value.trim().length() > 100) {
+            throw new IllegalArgumentException("Il " + fieldName + " non può superare i 100 caratteri");
         }
-        if (!nome.trim().matches("^[a-zA-ZÀ-ÿ\\s'.-]+$")) {
-            throw new IllegalArgumentException("Il nome contiene caratteri non validi");
-        }
-    }
-    
-    /**
-     * Valida il cognome della persona.
-     * 
-     * @param cognome il cognome da validare
-     * @throws IllegalArgumentException se il cognome non è valido
-     */
-    private void validateCognome(String cognome) {
-        if (cognome.trim().length() > 100) {
-            throw new IllegalArgumentException("Il cognome non può superare i 100 caratteri");
-        }
-        if (!cognome.trim().matches("^[a-zA-ZÀ-ÿ\\s'.-]+$")) {
-            throw new IllegalArgumentException("Il cognome contiene caratteri non validi");
+        if (!value.trim().matches("^[a-zA-ZÀ-ÿ\\s'.-]+$")) {
+            throw new IllegalArgumentException("Il " + fieldName + " contiene caratteri non validi");
         }
     }
     
@@ -172,18 +157,6 @@ public class PersonaService {
         String phonePattern = "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$";
         if (!telefono.trim().replaceAll("\\s+", "").matches(phonePattern)) {
             throw new IllegalArgumentException("Formato telefono non valido");
-        }
-    }
-    
-    /**
-     * Valida l'età della persona.
-     * 
-     * @param eta l'età da validare
-     * @throws IllegalArgumentException se l'età non è valida
-     */
-    private void validateEta(int eta) {
-        if (eta < 0 || eta > 150) {
-            throw new IllegalArgumentException("L'età deve essere compresa tra 0 e 150 anni");
         }
     }
 }

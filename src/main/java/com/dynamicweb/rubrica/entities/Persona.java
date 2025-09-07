@@ -3,7 +3,6 @@ package com.dynamicweb.rubrica.entities;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 /**
  * Entità che rappresenta una persona nella rubrica.

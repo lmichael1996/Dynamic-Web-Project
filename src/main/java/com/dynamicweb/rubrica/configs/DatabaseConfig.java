@@ -3,9 +3,10 @@ package com.dynamicweb.rubrica.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import com.dynamicweb.rubrica.dtos.DatabaseProperties;
 
 /**
  * Configurazione Spring per i bean DataSource e JdbcTemplate.
@@ -17,36 +18,20 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 public class DatabaseConfig {
 
-    @Value("${spring.datasource.url:jdbc:mysql://localhost:3306/test}")
-    private String url;
-
-    @Value("${spring.datasource.username:root}")
-    private String username;
-
-    @Value("${spring.datasource.password:}")
-    private String password;
-
-    @Value("${spring.datasource.driver-class-name:com.mysql.cj.jdbc.Driver}")
-    private String driverClassName;
-
     /**
-     * Bean per il DataSource configurato tramite application.properties
+     * Bean DataSource di default per l'inizializzazione dell'applicazione.
+     * Usa valori placeholder che verranno aggiornati dinamicamente.
      */
     @Bean
     public DriverManagerDataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
+        return new DriverManagerDataSource();
     }
 
     /**
-     * Bean per JdbcTemplate, usa il DataSource configurato sopra
+     * Bean per JdbcTemplate che usa il DataSource di default.
      */
     @Bean
     public JdbcTemplate jdbcTemplate(DriverManagerDataSource dataSource) {
         return new JdbcTemplate(dataSource);
-    }
+    }   
 }

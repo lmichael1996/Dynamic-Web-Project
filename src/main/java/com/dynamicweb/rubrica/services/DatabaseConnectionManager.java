@@ -2,7 +2,6 @@
 package com.dynamicweb.rubrica.services;
 
 import com.dynamicweb.rubrica.dtos.DatabaseProperties;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 
@@ -18,43 +17,57 @@ import org.springframework.stereotype.Service;
 @Service
 public class DatabaseConnectionManager {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final DriverManagerDataSource dataSource;
 
     /**
-     * Costruttore con injection del JdbcTemplate.
+     * Costruttore con injection del DataSource.
      */
-    public DatabaseConnectionManager(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public DatabaseConnectionManager(DriverManagerDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     /**
      * Aggiorna la connessione del JdbcTemplate con una nuova configurazione.
      * Valida e testa la configurazione prima di applicarla.
-     * @param config configurazione database
+     * 
+     * @param newProperties nuova configurazione database da applicare
      * @throws IllegalArgumentException se la configurazione non è valida
      * @throws RuntimeException se la connessione non è valida
      */
-    public void updateDataSource(DatabaseProperties config) {
+    public void updateDataSource(DatabaseProperties newProperties) {
         try {
-            config.validateConfiguration();
-            config.testConnection();
+            newProperties.validateConfiguration();
+            newProperties.testConnection();
+            setDataSource(newProperties);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Configurazione database non valida: " + e.getMessage(), e);
         } catch (RuntimeException e) {
             throw new RuntimeException("Connessione al database fallita: " + e.getMessage(), e);
         }
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(config.buildJdbcUrl());
-        dataSource.setUsername(config.getUsername());
-        dataSource.setPassword(config.getPassword());
-        jdbcTemplate.setDataSource(dataSource);
     }
 
     /**
-     * Restituisce il JdbcTemplate attuale.
+     * Configura e imposta il DataSource nel JdbcTemplate.
+     * 
+     * @param properties configurazione database da applicare
      */
-    public JdbcTemplate getJdbcTemplate() {
-        return jdbcTemplate;
+    private void setDataSource(DatabaseProperties properties) {
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl(properties.buildJdbcUrl());
+        dataSource.setUsername(properties.getUsername());
+        dataSource.setPassword(properties.getPassword());
+    }
+
+    /**
+     * Verifica se il DataSource è configurato con valori validi e non di default.
+     * Controlla che non siano null, vuoti o i valori placeholder iniziali.
+     * 
+     * @return {@code true} se il database è configurato con valori validi, {@code false} altrimenti
+     */
+    public boolean isDatabaseConfigured() {
+        // Verifica che i valori non siano null, vuoti o i placeholder di default
+        return !(dataSource.getUrl() == null &&
+               dataSource.getUsername() == null &&
+               dataSource.getPassword() == null);   
     }
 }

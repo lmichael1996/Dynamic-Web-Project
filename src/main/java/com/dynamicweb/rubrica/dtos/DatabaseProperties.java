@@ -1,6 +1,7 @@
 package com.dynamicweb.rubrica.dtos;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
@@ -22,6 +23,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class DatabaseProperties {
     
     /** Hostname o indirizzo IP del server MySQL */

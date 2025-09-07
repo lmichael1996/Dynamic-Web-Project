@@ -1,14 +1,15 @@
 package com.dynamicweb.rubrica.controllers;
 
 import com.dynamicweb.rubrica.services.AuthService;
+import com.dynamicweb.rubrica.services.DatabaseConnectionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import jakarta.servlet.http.HttpSession;
 
 /**
  * Controller per la gestione dell'autenticazione degli utenti.
  * Fornisce endpoint per login e gestione delle sessioni utente.
+ * Richiede configurazione database prima dell'accesso.
  *
  * @author Michael Leanza
  * @since 1.0
@@ -17,52 +18,64 @@ import jakarta.servlet.http.HttpSession;
 public class AuthController {
     
     private final AuthService authService;
+    private final DatabaseConnectionManager databaseConnectionManager;
     
     /**
-     * Costruttore per l'injection del servizio di autenticazione.
+     * Costruttore per l'injection dei servizi necessari.
      * 
      * @param authService servizio per le operazioni di autenticazione
+     * @param databaseConnectionManager manager per verificare la connessione database
      */
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, DatabaseConnectionManager databaseConnectionManager) {
         this.authService = authService;
+        this.databaseConnectionManager = databaseConnectionManager;
     }
     
     /**
-     * Mostra la pagina di login.
+     * Mostra la pagina di login se il database è configurato.
      * 
-     * @return nome della vista JSP per il login
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return nome della vista JSP per il login o redirect a configurazione
      */
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(RedirectAttributes redirectAttributes) {
+        if (!databaseConnectionManager.isDatabaseConfigured()) {
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Database non configurato. Configura prima la connessione al database."
+            );
+            return "redirect:/index";
+        }
         return "login";
     }
     
     /**
-     * Processa il form di login e autentica l'utente.
+     * Processa il login dell'utente se il database è configurato.
      * 
-     * <p>Valida le credenziali tramite {@link AuthService}. Se l'autenticazione
-     * ha successo, crea una sessione utente e reindirizza alla lista persone.
-     * In caso di errore, torna al login con messaggio di errore.</p>
-     * 
-     * @param username nome utente inserito nel form
-     * @param password password inserita nel form
-     * @param session sessione HTTP per memorizzare i dati utente
+     * @param username nome utente inserito
+     * @param password password inserita
      * @param redirectAttributes attributi per messaggi flash tra redirect
-     * @return redirect a /lista se successo, altrimenti a /login
+     * @return redirect alla lista persone se autenticato, altrimenti al login o configurazione
      */
     @PostMapping("/login")
-    public String processLogin(@RequestParam String username,
-                             @RequestParam String password,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes) {
-        if (authService.authenticate(username, password)) {
-            authService.login(session, username);
-            return "redirect:/lista";
-        } else {
+    public String processLogin(
+            @RequestParam String username, 
+            @RequestParam String password,
+            RedirectAttributes redirectAttributes) {
+
+        if (!databaseConnectionManager.isDatabaseConfigured()) {
             redirectAttributes.addFlashAttribute(
                 "errorMessage", 
-                "Username o password errati"
+                "Database non configurato. Configura prima la connessione al database."
             );
+            return "redirect:/index";
+        }
+        
+        // Procede con l'autenticazione
+        if (authService.authenticate(username, password)) {
+            return "redirect:/persone/lista";
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Credenziali non valide");
             return "redirect:/login";
         }
     }

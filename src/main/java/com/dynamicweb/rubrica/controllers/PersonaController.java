@@ -108,14 +108,16 @@ public class PersonaController {
     /**
      * Salva o aggiorna una persona (insert/update).
      * 
-     * <p>Se la persona ha un ID, viene aggiornata; altrimenti viene creata una nuova.</p>
+     * <p>Se la persona ha un ID, viene aggiornata; altrimenti viene creata una nuova.
+     * In caso di successo reindirizza alla lista, in caso di errore rimane nell'editor.</p>
      * 
      * @param person oggetto persona dal form
      * @param redirectAttributes attributi per messaggi flash tra redirect
-     * @return redirect a /lista con messaggio di successo o errore
+     * @param model model per passare dati alla vista in caso di errore
+     * @return redirect a /lista se successo, vista "editor" se errore
      */
     @PostMapping("/salva")
-    public String savePerson(@ModelAttribute Persona person, RedirectAttributes redirectAttributes) {
+    public String savePerson(@ModelAttribute Persona person, RedirectAttributes redirectAttributes, Model model) {
         try {
             if (person.getId() != null) {
                 // Update existing person
@@ -124,11 +126,14 @@ public class PersonaController {
                         "successMessage", 
                         "Persona aggiornata con successo!"
                     );
+                    return "redirect:/lista";
                 } else {
-                    redirectAttributes.addFlashAttribute(
+                    model.addAttribute(
                         "errorMessage", 
                         "Errore durante l'aggiornamento della persona!"
                     );
+                    model.addAttribute("person", person);
+                    return "editor";
                 }
             } else {
                 // Insert new person
@@ -137,21 +142,25 @@ public class PersonaController {
                         "successMessage", 
                         "Persona salvata con successo!"
                     );
+                    return "redirect:/lista";
                 } else {
-                    redirectAttributes.addFlashAttribute(
+                    model.addAttribute(
                         "errorMessage", 
                         "Errore durante il salvataggio della persona!"
                     );
+                    model.addAttribute("person", person);
+                    return "editor";
                 }
             }
             
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute(
+            model.addAttribute(
                 "errorMessage", 
                 "Errore di connessione durante il salvataggio: " + e.getMessage()
             );
+            model.addAttribute("person", person);
+            return "editor";
         }
-        return "redirect:/lista";
     }
     
     /**
