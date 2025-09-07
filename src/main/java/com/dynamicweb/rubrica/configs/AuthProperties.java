@@ -19,5 +19,14 @@ public class AuthProperties {
     private String username;
     
     private String password;
-    
+
+    /**
+     * Verifica se le credenziali corrispondono a quelle configurate.
+     * @param username nome utente da verificare
+     * @param password password da verificare
+     * @return true se le credenziali sono corrette, false altrimenti
+     */
+    public boolean checkCredentials(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
+    }
 }

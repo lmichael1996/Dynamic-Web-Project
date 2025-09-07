@@ -19,8 +19,6 @@ import jakarta.servlet.http.HttpSession;
  * 
  * @author Michael Leanza
  * @since 1.0
- * @see AuthProperties
- * @see HttpSession
  */
 @Service
 public class AuthService {
@@ -47,8 +45,7 @@ public class AuthService {
      * @return {@code true} se le credenziali sono corrette, {@code false} altrimenti
      */
     public boolean authenticate(String username, String password) {
-        return authProperties.getUsername().equals(username) && 
-               authProperties.getPassword().equals(password);
+        return authProperties.checkCredentials(username, password);
     }
     
     /**
@@ -75,17 +72,5 @@ public class AuthService {
      */
     public void login(HttpSession session, String username) {
         session.setAttribute("loggedUser", username);
-    }
-    
-    /**
-     * Ottiene il nome dell'utente attualmente autenticato.
-     * 
-     * <p>Recupera l'username dalla sessione HTTP se presente.</p>
-     * 
-     * @param session la sessione HTTP corrente
-     * @return il nome utente autenticato, o {@code null} se non autenticato
-     */
-    public String getCurrentUser(HttpSession session) {
-        return (String) session.getAttribute("loggedUser");
     }
 }

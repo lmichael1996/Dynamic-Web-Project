@@ -1,7 +1,8 @@
+
 package com.dynamicweb.rubrica.controllers;
 
-import com.dynamicweb.rubrica.dtos.DatabaseConfig;
-import com.dynamicweb.rubrica.services.DataSourceService;
+import com.dynamicweb.rubrica.dtos.DatabaseProperties;
+import com.dynamicweb.rubrica.services.DatabaseConnectionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,21 +23,21 @@ import jakarta.servlet.http.HttpSession;
  * 
  * @author Michael Leanza
  * @since 1.0
- * @see DataSourceService
- * @see DatabaseConfig
+ * @see DatabaseConnectionManager
+ * @see DatabaseProperties
  */
 @Controller
 public class MainController {
-    
-    private final DataSourceService dataSourceService;
-    
+
+    private final DatabaseConnectionManager databaseConnectionManager;
+
     /**
      * Costruttore del controller principale.
      * 
-     * @param dataSourceService il servizio per la gestione del datasource
+     * @param databaseConnectionManager il manager per la gestione delle connessioni al database
      */
-    public MainController(DataSourceService dataSourceService) {
-        this.dataSourceService = dataSourceService;
+    public MainController(DatabaseConnectionManager databaseConnectionManager) {
+        this.databaseConnectionManager = databaseConnectionManager;
     }
     
     /**
@@ -67,9 +68,9 @@ public class MainController {
     /**
      * Elabora la configurazione del database e testa la connessione.
      * 
-     * <p>Riceve i parametri di connessione dal form, crea un oggetto {@link DatabaseConfig},
+     * <p>Riceve i parametri di connessione dal form, crea un oggetto {@link DatabaseProperties},
      * valida la configurazione, testa la connessione al database e, se tutto va a buon fine,
-     * aggiorna il DataSource dell'applicazione tramite {@link DataSourceService}.</p>
+     * aggiorna il DataSource dell'applicazione tramite {@link DatabaseConnectionManager}.</p>
      * 
      * <p>In caso di successo reindirizza alla pagina di login, altrimenti torna alla
      * pagina di configurazione con un messaggio di errore.</p>
@@ -94,11 +95,11 @@ public class MainController {
         
         try {
             // Crea la configurazione
-            DatabaseConfig config = new DatabaseConfig(host, port, dbName, username, password);
+            DatabaseProperties config = new DatabaseProperties(host, port, dbName, username, password);
 
-            // Aggiorna il DataSource e JdbcTemplate tramite il DataSourceService
-            dataSourceService.updateDataSource(config);
-            
+            // Aggiorna il DataSource e JdbcTemplate tramite il DatabaseConnectionManager
+            databaseConnectionManager.updateDataSource(config);
+
             // Dopo la configurazione, vai al login
             return "redirect:/login";
             

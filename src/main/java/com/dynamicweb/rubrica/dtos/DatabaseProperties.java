@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Data
 @AllArgsConstructor
-public class DatabaseConfig {
+public class DatabaseProperties {
     
     private String host;
     private int port;

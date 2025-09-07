@@ -64,7 +64,10 @@ public class AuthController {
             authService.login(session, username);
             return "redirect:/lista";
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Username o password errati");
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Username o password errati"
+            );
             return "redirect:/login";
         }
     }
