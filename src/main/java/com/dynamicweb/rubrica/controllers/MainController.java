@@ -1,4 +1,3 @@
-
 package com.dynamicweb.rubrica.controllers;
 
 import com.dynamicweb.rubrica.dtos.DatabaseProperties;

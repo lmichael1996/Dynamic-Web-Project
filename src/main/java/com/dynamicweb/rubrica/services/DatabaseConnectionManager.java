@@ -38,24 +38,16 @@ public class DatabaseConnectionManager {
         try {
             newProperties.validateConfiguration();
             newProperties.testConnection();
-            setDataSource(newProperties);
+            // Applica la nuova configurazione al DataSource
+            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSource.setUrl(newProperties.buildJdbcUrl());
+            dataSource.setUsername(newProperties.getUsername());
+            dataSource.setPassword(newProperties.getPassword());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Configurazione database non valida: " + e.getMessage(), e);
         } catch (RuntimeException e) {
             throw new RuntimeException("Connessione al database fallita: " + e.getMessage(), e);
         }
-    }
-
-    /**
-     * Configura e imposta il DataSource nel JdbcTemplate.
-     * 
-     * @param properties configurazione database da applicare
-     */
-    private void setDataSource(DatabaseProperties properties) {
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(properties.buildJdbcUrl());
-        dataSource.setUsername(properties.getUsername());
-        dataSource.setPassword(properties.getPassword());
     }
 
     /**
@@ -65,9 +57,13 @@ public class DatabaseConnectionManager {
      * @return {@code true} se il database è configurato con valori validi, {@code false} altrimenti
      */
     public boolean isDatabaseConfigured() {
-        // Verifica che i valori non siano null, vuoti o i placeholder di default
-        return !(dataSource.getUrl() == null &&
-               dataSource.getUsername() == null &&
-               dataSource.getPassword() == null);   
+        String url = dataSource.getUrl();
+        String username = dataSource.getUsername();
+        String password = dataSource.getPassword();
+        
+        // Verifica che i valori essenziali siano presenti e non vuoti
+        return url != null && !url.trim().isEmpty() &&
+               username != null && !username.trim().isEmpty() &&
+               password != null;
     }
 }

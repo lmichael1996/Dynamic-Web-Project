@@ -3,6 +3,7 @@ package com.dynamicweb.rubrica.controllers;
 import com.dynamicweb.rubrica.entities.Persona;
 import com.dynamicweb.rubrica.services.PersonaService;
 import com.dynamicweb.rubrica.services.AuthService;
+import com.dynamicweb.rubrica.services.DatabaseConnectionManager;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,17 +24,50 @@ import jakarta.servlet.http.HttpSession;
 public class PersonaController {
     
     private final PersonaService personaService;
+    private final DatabaseConnectionManager databaseConnectionManager;
     private final AuthService authService;
 
     /**
      * Costruttore per l'injection dei servizi necessari.
      * 
      * @param personaService servizio per operazioni CRUD sulle persone
+     * @param databaseConnectionManager manager per verificare la configurazione database
      * @param authService servizio per la gestione dell'autenticazione
      */
-    public PersonaController(PersonaService personaService, AuthService authService) {
+    public PersonaController(PersonaService personaService, DatabaseConnectionManager databaseConnectionManager, AuthService authService) {
         this.personaService = personaService;
+        this.databaseConnectionManager = databaseConnectionManager;
         this.authService = authService;
+    }
+    
+    /**
+     * Verifica i prerequisiti per l'accesso alle funzionalità del controller.
+     * Controlla che il database sia configurato e l'utente sia autenticato.
+     * 
+     * @param session sessione HTTP per verifica autenticazione
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return redirect string se controlli falliscono, null se tutto ok
+     */
+    private String checkAccessPrerequisites(HttpSession session, RedirectAttributes redirectAttributes) {
+        // Verifica che il database sia configurato
+        if (!databaseConnectionManager.isDatabaseConfigured()) {
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Database non configurato. Configura prima la connessione al database."
+            );
+            return "redirect:/index";
+        }
+
+        // Verifica autenticazione - OBBLIGATORIA per accedere alla lista
+        if (!authService.isLoggedIn(session)) {
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Devi effettuare il login per accedere alla lista persone"
+            );
+            return "redirect:/login";
+        }
+        
+        return null; // Tutti i controlli superati
     }
     
     /**
@@ -49,13 +83,10 @@ public class PersonaController {
      */
     @GetMapping("/lista")
     public String listPersons(Model model, RedirectAttributes redirectAttributes, HttpSession session) {
-        // Verifica autenticazione - OBBLIGATORIA per accedere alla lista
-        if (!authService.isLoggedIn(session)) {
-            redirectAttributes.addFlashAttribute(
-                "errorMessage", 
-                "Devi effettuare il login per accedere alla lista persone"
-            );
-            return "redirect:/login";
+        // Verifica prerequisiti di accesso
+        String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
+        if (accessCheck != null) {
+            return accessCheck;
         }
         
         try {
@@ -74,11 +105,18 @@ public class PersonaController {
      * Mostra il form per creare una nuova persona.
      * 
      * @param model model per passare oggetto persona vuoto alla vista
-     * @param redirectAttributes attributi per messaggi flash (non utilizzato)
+     * @param session sessione HTTP per verifica autenticazione
+     * @param redirectAttributes attributi per messaggi flash tra redirect
      * @return vista "editor" con form vuoto
      */
     @GetMapping("/editor")
-    public String newPerson(Model model, RedirectAttributes redirectAttributes) {
+    public String newPerson(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        // Verifica prerequisiti di accesso
+        String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
+        if (accessCheck != null) {
+            return accessCheck;
+        }
+        
         model.addAttribute("person", new Persona());
         return "editor";
     }
@@ -88,11 +126,18 @@ public class PersonaController {
      * 
      * @param id ID della persona da modificare
      * @param model model per passare dati alla vista
+     * @param session sessione HTTP per verifica autenticazione
      * @param redirectAttributes attributi per messaggi flash tra redirect
      * @return vista "editor" con dati persona, altrimenti redirect a /lista
      */
     @GetMapping("/editor/{id}")
-    public String editPerson(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String editPerson(@PathVariable Long id, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        // Verifica prerequisiti di accesso
+        String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
+        if (accessCheck != null) {
+            return accessCheck;
+        }
+        
         try {
             model.addAttribute("person", personaService.getPersonById(id));
             return "editor";
@@ -112,12 +157,19 @@ public class PersonaController {
      * In caso di successo reindirizza alla lista, in caso di errore rimane nell'editor.</p>
      * 
      * @param person oggetto persona dal form
+     * @param session sessione HTTP per verifica autenticazione
      * @param redirectAttributes attributi per messaggi flash tra redirect
      * @param model model per passare dati alla vista in caso di errore
      * @return redirect a /lista se successo, vista "editor" se errore
      */
     @PostMapping("/salva")
-    public String savePerson(@ModelAttribute Persona person, RedirectAttributes redirectAttributes, Model model) {
+    public String savePerson(@ModelAttribute Persona person, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        // Verifica prerequisiti di accesso
+        String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
+        if (accessCheck != null) {
+            return accessCheck;
+        }
+        
         try {
             if (person.getId() != null) {
                 // Update existing person
@@ -167,11 +219,18 @@ public class PersonaController {
      * Elimina una persona dal database.
      * 
      * @param id ID della persona da eliminare
+     * @param session sessione HTTP per verifica autenticazione
      * @param redirectAttributes attributi per messaggi flash tra redirect
      * @return redirect a /lista con messaggio di successo o errore
      */
     @GetMapping("/elimina/{id}")
-    public String deletePerson(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deletePerson(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+        // Verifica prerequisiti di accesso
+        String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
+        if (accessCheck != null) {
+            return accessCheck;
+        }
+        
         try {
             if (personaService.deletePerson(id)) {
                 redirectAttributes.addFlashAttribute(
