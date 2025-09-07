@@ -7,22 +7,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * Controller per la gestione dell'autenticazione dell'applicazione.
- * 
- * <p>Questo controller gestisce tutte le operazioni relative al login degli utenti,
- * inclusa la visualizzazione della pagina di login e il processo di autenticazione.
- * Tutti gli endpoint sono mappati sotto il prefisso "/auth".</p>
- * 
- * <p>Utilizza {@link AuthService} per le operazioni di autenticazione e
- * la sessione HTTP per mantenere lo stato di login.</p>
- * 
+ * Controller per la gestione dell'autenticazione utenti.
+ * Gestisce login e sessione tramite AuthService.
+ *
  * @author Michael Leanza
  * @since 1.0
- * @see AuthService
- * @see HttpSession
  */
 @Controller
-@RequestMapping("/auth")
 public class AuthController {
     
     private final AuthService authService;
@@ -39,6 +30,7 @@ public class AuthController {
     /**
      * Visualizza la pagina di login.
      * 
+     * <p>URL: http://localhost:8080/login</p>
      * <p>Restituisce la vista "login" che contiene il form per l'inserimento
      * delle credenziali di accesso.</p>
      * 
@@ -68,13 +60,12 @@ public class AuthController {
                              @RequestParam String password,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
-        
         if (authService.authenticate(username, password)) {
             authService.login(session, username);
             return "redirect:/lista";
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Username o password errati");
-            return "redirect:/auth/login";
+            return "redirect:/login";
         }
     }
 }

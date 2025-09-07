@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.michaelleanza</groupId>
-	<artifactId>app</artifactId>
+	<artifactId>dynamic-web-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>app</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Dynamic Web App</name>
+	<description>Simple Dynamic Web Application with Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>

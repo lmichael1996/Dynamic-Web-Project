@@ -17,6 +17,12 @@ public class DataSourceService {
     }
 
     public void updateDataSource(DatabaseConfig config) {
+        // Valida la configurazione  
+        config.validateConfiguration();
+
+        // Testa la connessione
+        config.testConnection();
+
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl(config.buildJdbcUrl());
         dataSource.setUsername(config.getUsername());

@@ -35,11 +35,6 @@ public class DatabaseConfig {
      * Valida la configurazione del database
      */
     public void validateConfiguration() {
-
-        if (!isComplete()) {
-            throw new IllegalArgumentException("Configurazione incompleta");
-        }
-
         if (!isValidHost(host)) {
             throw new IllegalArgumentException("Host non valido: " + host);
         }
@@ -62,24 +57,9 @@ public class DatabaseConfig {
     }
 
     /**
-     * Verifica se la configurazione è completa
-     */
-    private boolean isComplete() {
-        return host != null && !host.trim().isEmpty() &&
-               port != 0 &&
-               dbName != null && !dbName.trim().isEmpty() &&
-               username != null && !username.trim().isEmpty() &&
-               password != null;
-    }
-
-    /**
      * Valida l'host
      */
     private boolean isValidHost(String host) {
-        if (host == null || host.trim().isEmpty()) {
-            return false;
-        }
-        
         // Pattern per validare hostname o IP
         String hostPattern = "^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)*)?" +
                            "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$|" +
@@ -93,17 +73,13 @@ public class DatabaseConfig {
      * Valida la porta
      */
     private boolean isValidPort(Integer port) {
-        return port != null && port >= 1 && port <= 65535;
+        return port >= 1 && port <= 65535;
     }
     
     /**
      * Valida il nome del database
      */
     private boolean isValidDatabaseName(String dbName) {
-        if (dbName == null || dbName.trim().isEmpty()) {
-            return false;
-        }
-        
         // MySQL database name rules: può contenere lettere, numeri, underscore
         // Non può iniziare con un numero, lunghezza massima 64 caratteri
         String dbPattern = "^[a-zA-Z_][a-zA-Z0-9_]{0,63}$";
@@ -114,10 +90,6 @@ public class DatabaseConfig {
      * Valida l'username
      */
     private boolean isValidUsername(String username) {
-        if (username == null || username.trim().isEmpty()) {
-            return false;
-        }
-        
         // MySQL username rules: massimo 32 caratteri, non può contenere caratteri speciali
         return username.trim().length() <= 32 && 
                Pattern.compile("^[a-zA-Z0-9_@.-]+$").matcher(username.trim()).matches();
@@ -128,7 +100,7 @@ public class DatabaseConfig {
      */
     private boolean isValidPassword(String password) {
         // Password può essere vuota ma non null, massimo 128 caratteri
-        return password != null && password.length() <= 128;
+        return password.length() <= 128;
     }
     
     /**

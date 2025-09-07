@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpSession;
  * <p>Il flusso dell'applicazione prevede: configurazione database → autenticazione → 
  * gestione persone.</p>
  * 
+ * <p><strong>URL dell'applicazione:</strong> http://localhost:8080/</p>
+ * 
  * @author Michael Leanza
  * @since 1.0
  * @see DataSourceService
@@ -38,11 +40,13 @@ public class MainController {
     }
     
     /**
-     * Endpoint root che reindirizza alla pagina di configurazione.
+     * Endpoint root dell'applicazione che reindirizza alla pagina di configurazione.
+     * 
+     * <p>URL: http://localhost:8080/</p>
      * 
      * @return redirect alla pagina index
      */
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public String root() {
         return "redirect:/index";
     }
@@ -91,18 +95,12 @@ public class MainController {
         try {
             // Crea la configurazione
             DatabaseConfig config = new DatabaseConfig(host, port, dbName, username, password);
-            
-            // Valida la configurazione  
-            config.validateConfiguration();
-
-            // Testa la connessione
-            config.testConnection();
 
             // Aggiorna il DataSource e JdbcTemplate tramite il DataSourceService
             dataSourceService.updateDataSource(config);
             
             // Dopo la configurazione, vai al login
-            return "redirect:/auth/login";
+            return "redirect:/login";
             
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", 

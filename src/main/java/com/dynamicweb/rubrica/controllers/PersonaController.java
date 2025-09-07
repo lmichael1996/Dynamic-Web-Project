@@ -10,6 +10,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controller per la gestione delle persone (CRUD operations).
+ * 
+ * <p>Questo controller gestisce tutte le operazioni relative alle persone:
+ * visualizzazione lista, creazione, modifica ed eliminazione.</p>
+ * 
+ * <p>L'accesso alla lista persone richiede autenticazione obbligatoria.</p>
+ * 
+ * @author Michael Leanza
+ * @since 1.0
+ */
 @Controller
 public class PersonaController {
     
@@ -21,14 +32,24 @@ public class PersonaController {
         this.authService = authService;
     }
     
-    // Show persons list
+    /**
+     * Visualizza la lista delle persone.
+     * 
+     * <p>URL: http://localhost:8080/lista</p>
+     * <p>Richiede autenticazione obbligatoria.</p>
+     * 
+     * @param model il model per passare dati alla vista
+     * @param redirectAttributes attributi per i messaggi di redirect
+     * @param session la sessione HTTP per verificare l'autenticazione
+     * @return la vista "lista" o redirect al login se non autenticato
+     */
     @GetMapping("/lista")
     public String listPersons(Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         // Verifica autenticazione - OBBLIGATORIA per accedere alla lista
         if (!authService.isLoggedIn(session)) {
             redirectAttributes.addFlashAttribute("errorMessage", 
                 "Devi effettuare il login per accedere alla lista persone");
-            return "redirect:/auth/login";
+            return "redirect:/login";
         }
         
         try {
@@ -70,27 +91,25 @@ public class PersonaController {
     public String savePerson(@ModelAttribute Persona person, RedirectAttributes redirectAttributes) {
         try {
             boolean success;
-            String action;
+            String operation;
             
             if (person.getId() != null) {
                 // Update existing person
                 success = personaService.updatePerson(person);
-                action = "aggiornamento";
+                operation = "aggiornata";
             } else {
                 // Insert new person
                 success = personaService.savePerson(person);
-                action = "salvataggio";
+                operation = "salvata";
             }
             
-            if (success) {
-                redirectAttributes.addFlashAttribute(
-                    "successMessage", "Persona " + (person.getId() != null ? "aggiornata" : "salvata") + " con successo!"
-                );
-            } else {
-                redirectAttributes.addFlashAttribute(
-                    "errorMessage", "Errore durante il " + action + " della persona!"
-                );
-            }
+            String message = success ? 
+                "Persona " + operation + " con successo!" :
+                "Errore durante l'operazione sulla persona!";
+            
+            String messageType = success ? "successMessage" : "errorMessage";
+            redirectAttributes.addFlashAttribute(messageType, message);
+            
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute(
                 "errorMessage", 
@@ -105,12 +124,21 @@ public class PersonaController {
     public String deletePerson(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             if (personaService.deletePerson(id)) {
-                redirectAttributes.addFlashAttribute("successMessage", "Persona eliminata con successo!");
+                redirectAttributes.addFlashAttribute(
+                    "successMessage", 
+                    "Persona eliminata con successo!"
+                );
             } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Errore durante l'eliminazione della persona!");
+                redirectAttributes.addFlashAttribute(
+                    "errorMessage", 
+                    "Errore durante l'eliminazione della persona!"
+                );
             }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Errore di connessione durante l'eliminazione: " + e.getMessage());
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Errore di connessione durante l'eliminazione: " + e.getMessage()
+            );
         }
         return "redirect:/lista";
     }

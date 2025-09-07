@@ -56,22 +56,48 @@ public class PersonaService {
     }
     
     /**
-     * Salva una nuova persona nel database.
+     * Salva una nuova persona nel database dopo aver validato i dati.
      * 
      * @param persona la persona da salvare (senza ID)
      * @return {@code true} se il salvataggio è avvenuto con successo, {@code false} altrimenti
+     * @throws IllegalArgumentException se i dati della persona non sono validi
      */
     public boolean savePerson(Persona persona) {
+        if (persona == null) {
+            throw new IllegalArgumentException("La persona non può essere null");
+        }
+        
+        // Per l'inserimento, l'ID deve essere null
+        if (persona.getId() != null) {
+            throw new IllegalArgumentException("L'ID deve essere null per una nuova persona");
+        }
+        
+        // Valida tutti i dati
+        validatePersona(persona);
+        
         return personaRepository.insert(persona);
     }
     
     /**
-     * Aggiorna una persona esistente nel database.
+     * Aggiorna una persona esistente nel database dopo aver validato i dati.
      * 
      * @param persona la persona con i dati aggiornati (deve contenere l'ID)
      * @return {@code true} se l'aggiornamento è avvenuto con successo, {@code false} altrimenti
+     * @throws IllegalArgumentException se i dati della persona non sono validi
      */
     public boolean updatePerson(Persona persona) {
+        if (persona == null) {
+            throw new IllegalArgumentException("La persona non può essere null");
+        }
+        
+        // Per l'aggiornamento, l'ID è obbligatorio
+        if (persona.getId() == null || persona.getId() <= 0) {
+            throw new IllegalArgumentException("ID persona obbligatorio per l'aggiornamento: " + persona.getId());
+        }
+        
+        // Valida tutti i dati
+        validatePersona(persona);
+        
         return personaRepository.update(persona);
     }
     
@@ -80,8 +106,84 @@ public class PersonaService {
      * 
      * @param id l'identificativo della persona da eliminare
      * @return {@code true} se l'eliminazione è avvenuta con successo, {@code false} altrimenti
+     * @throws IllegalArgumentException se l'ID non è valido
      */
     public boolean deletePerson(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID persona non valido: " + id);
+        }
         return personaRepository.deleteById(id);
+    }
+    
+    /**
+     * Valida tutti i campi della persona.
+     * 
+     * @param persona la persona da validare
+     * @throws IllegalArgumentException se uno o più campi non sono validi
+     */
+    private void validatePersona(Persona persona) {
+        validateNome(persona.getNome());
+        validateCognome(persona.getCognome());
+        validateTelefono(persona.getTelefono());
+        validateEta(persona.getEta());
+    }
+    
+    /**
+     * Valida il nome della persona.
+     * 
+     * @param nome il nome da validare
+     * @throws IllegalArgumentException se il nome non è valido
+     */
+    private void validateNome(String nome) {
+        if (nome.trim().length() > 100) {
+            throw new IllegalArgumentException("Il nome non può superare i 100 caratteri");
+        }
+        if (!nome.trim().matches("^[a-zA-ZÀ-ÿ\\s'.-]+$")) {
+            throw new IllegalArgumentException("Il nome contiene caratteri non validi");
+        }
+    }
+    
+    /**
+     * Valida il cognome della persona.
+     * 
+     * @param cognome il cognome da validare
+     * @throws IllegalArgumentException se il cognome non è valido
+     */
+    private void validateCognome(String cognome) {
+        if (cognome.trim().length() > 100) {
+            throw new IllegalArgumentException("Il cognome non può superare i 100 caratteri");
+        }
+        if (!cognome.trim().matches("^[a-zA-ZÀ-ÿ\\s'.-]+$")) {
+            throw new IllegalArgumentException("Il cognome contiene caratteri non validi");
+        }
+    }
+    
+    /**
+     * Valida il telefono della persona.
+     * 
+     * @param telefono il telefono da validare
+     * @throws IllegalArgumentException se il telefono non è valido
+     */
+    private void validateTelefono(String telefono) {
+        if (telefono.trim().length() > 20) {
+            throw new IllegalArgumentException("Il telefono non può superare i 20 caratteri");
+        }
+        // Pattern per telefono italiano (con o senza prefisso internazionale)
+        String phonePattern = "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$";
+        if (!telefono.trim().replaceAll("\\s+", "").matches(phonePattern)) {
+            throw new IllegalArgumentException("Formato telefono non valido");
+        }
+    }
+    
+    /**
+     * Valida l'età della persona.
+     * 
+     * @param eta l'età da validare
+     * @throws IllegalArgumentException se l'età non è valida
+     */
+    private void validateEta(int eta) {
+        if (eta < 0 || eta > 150) {
+            throw new IllegalArgumentException("L'età deve essere compresa tra 0 e 150 anni");
+        }
     }
 }
