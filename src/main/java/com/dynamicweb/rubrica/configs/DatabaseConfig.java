@@ -8,8 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
- * Configurazione per il DataSource e JdbcTemplate.
- * Permette di gestire la connessione al database MySQL.
+ * Configurazione Spring per i bean DataSource e JdbcTemplate.
+ * Gestisce la connessione al database MySQL con supporto per configurazione dinamica.
+ *
+ * @author Michael Leanza
+ * @since 1.0
  */
 @Configuration
 public class DatabaseConfig {

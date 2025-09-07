@@ -21,24 +21,17 @@ import lombok.Builder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Persona {
     
-    /** Identificativo univoco della persona */
     private Long id;
     
-    /** Nome della persona */
     private String nome;
     
-    /** Cognome della persona */
     private String cognome;
     
-    /** Indirizzo di residenza */
     private String indirizzo;
     
-    /** Numero di telefono */
     private String telefono;
     
-    /** Età della persona */
     private int eta;
 }

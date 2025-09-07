@@ -7,8 +7,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * Controller per la gestione dell'autenticazione utenti.
- * Gestisce login e sessione tramite AuthService.
+ * Controller per la gestione dell'autenticazione degli utenti.
+ * Fornisce endpoint per login e gestione delle sessioni utente.
  *
  * @author Michael Leanza
  * @since 1.0
@@ -19,22 +19,18 @@ public class AuthController {
     private final AuthService authService;
     
     /**
-     * Costruttore del controller di autenticazione.
+     * Costruttore per l'injection del servizio di autenticazione.
      * 
-     * @param authService il servizio per le operazioni di autenticazione
+     * @param authService servizio per le operazioni di autenticazione
      */
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
     
     /**
-     * Visualizza la pagina di login.
+     * Mostra la pagina di login.
      * 
-     * <p>URL: http://localhost:8080/login</p>
-     * <p>Restituisce la vista "login" che contiene il form per l'inserimento
-     * delle credenziali di accesso.</p>
-     * 
-     * @return il nome della vista login
+     * @return nome della vista JSP per il login
      */
     @GetMapping("/login")
     public String loginPage() {
@@ -42,18 +38,17 @@ public class AuthController {
     }
     
     /**
-     * Elabora il submit del form di login e autentica l'utente.
+     * Processa il form di login e autentica l'utente.
      * 
-     * <p>Verifica le credenziali fornite dall'utente utilizzando {@link AuthService}.
-     * In caso di successo, registra l'utente nella sessione e reindirizza alla
-     * lista delle persone. In caso di errore, torna alla pagina di login con
-     * un messaggio di errore.</p>
+     * <p>Valida le credenziali tramite {@link AuthService}. Se l'autenticazione
+     * ha successo, crea una sessione utente e reindirizza alla lista persone.
+     * In caso di errore, torna al login con messaggio di errore.</p>
      * 
-     * @param username il nome utente inserito
-     * @param password la password inserita
-     * @param session la sessione HTTP corrente
-     * @param redirectAttributes attributi per i messaggi di redirect
-     * @return redirect alla lista persone se successo, altrimenti al login
+     * @param username nome utente inserito nel form
+     * @param password password inserita nel form
+     * @param session sessione HTTP per memorizzare i dati utente
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return redirect a /lista se successo, altrimenti a /login
      */
     @PostMapping("/login")
     public String processLogin(@RequestParam String username,

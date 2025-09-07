@@ -9,22 +9,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * Controller principale per la gestione della configurazione database dell'applicazione.
+ * Controller per la configurazione iniziale del database.
  * 
- * <p>Questo controller gestisce la pagina iniziale dell'applicazione dove gli utenti
- * possono configurare la connessione al database MySQL. Fornisce l'interfaccia per
- * inserire i parametri di connessione e testa la connettività prima di procedere
- * con l'autenticazione.</p>
+ * <p>Fornisce l'interfaccia di setup per configurare i parametri
+ * di connessione al database MySQL prima dell'accesso all'applicazione.</p>
  * 
- * <p>Il flusso dell'applicazione prevede: configurazione database → autenticazione → 
- * gestione persone.</p>
- * 
- * <p><strong>URL dell'applicazione:</strong> http://localhost:8080/</p>
+ * <p>Flusso: configurazione database → autenticazione → gestione persone</p>
  * 
  * @author Michael Leanza
  * @since 1.0
- * @see DatabaseConnectionManager
- * @see DatabaseProperties
  */
 @Controller
 public class MainController {
@@ -32,20 +25,20 @@ public class MainController {
     private final DatabaseConnectionManager databaseConnectionManager;
 
     /**
-     * Costruttore del controller principale.
+     * Costruttore per l'injection del manager di connessioni database.
      * 
-     * @param databaseConnectionManager il manager per la gestione delle connessioni al database
+     * @param databaseConnectionManager manager per le connessioni al database
      */
     public MainController(DatabaseConnectionManager databaseConnectionManager) {
         this.databaseConnectionManager = databaseConnectionManager;
     }
     
     /**
-     * Endpoint root dell'applicazione che reindirizza alla pagina di configurazione.
+     * Endpoint root che reindirizza alla pagina di configurazione.
      * 
-     * <p>URL: http://localhost:8080/</p>
+     * <p>Mappato su: "/" e ""</p>
      * 
-     * @return redirect alla pagina index
+     * @return redirect verso /index
      */
     @GetMapping({"", "/"})
     public String root() {
@@ -53,12 +46,12 @@ public class MainController {
     }
     
     /**
-     * Visualizza la pagina di configurazione del database.
+     * Mostra la pagina di configurazione del database.
      * 
-     * <p>Mostra un form per l'inserimento dei parametri di connessione
-     * al database MySQL (host, porta, nome database, username, password).</p>
+     * <p>Presenta un form per inserire i parametri di connessione MySQL:
+     * host, porta, nome database, username e password.</p>
      * 
-     * @return il nome della vista index
+     * @return nome della vista JSP per la configurazione
      */
     @GetMapping("/index")
     public String index() {
@@ -66,23 +59,20 @@ public class MainController {
     }
     
     /**
-     * Elabora la configurazione del database e testa la connessione.
+     * Processa la configurazione del database e valida la connessione.
      * 
-     * <p>Riceve i parametri di connessione dal form, crea un oggetto {@link DatabaseProperties},
-     * valida la configurazione, testa la connessione al database e, se tutto va a buon fine,
-     * aggiorna il DataSource dell'applicazione tramite {@link DatabaseConnectionManager}.</p>
+     * <p>Crea un {@link DatabaseProperties} dai parametri del form, valida la
+     * configurazione e testa la connettività. Se tutto è corretto, aggiorna
+     * il DataSource tramite {@link DatabaseConnectionManager} e procede al login.</p>
      * 
-     * <p>In caso di successo reindirizza alla pagina di login, altrimenti torna alla
-     * pagina di configurazione con un messaggio di errore.</p>
-     * 
-     * @param host l'hostname del server MySQL
-     * @param port la porta del server MySQL
-     * @param dbName il nome del database
-     * @param username l'username per la connessione al database
-     * @param password la password per la connessione al database
-     * @param session la sessione HTTP corrente
-     * @param redirectAttributes attributi per i messaggi di redirect
-     * @return redirect al login se successo, altrimenti alla configurazione
+     * @param host hostname del server MySQL
+     * @param port porta del server MySQL  
+     * @param dbName nome del database
+     * @param username username per la connessione
+     * @param password password per la connessione
+     * @param session sessione HTTP (non utilizzata attualmente)
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return redirect a /login se successo, altrimenti a /index con errore
      */
     @PostMapping("/configure")
     public String configureDatabase(@RequestParam String host,
@@ -94,18 +84,20 @@ public class MainController {
                                   RedirectAttributes redirectAttributes) {
         
         try {
-            // Crea la configurazione
+            // Crea configurazione database dai parametri del form
             DatabaseProperties config = new DatabaseProperties(host, port, dbName, username, password);
 
-            // Aggiorna il DataSource e JdbcTemplate tramite il DatabaseConnectionManager
+            // Valida e applica la nuova configurazione al DataSource
             databaseConnectionManager.updateDataSource(config);
 
-            // Dopo la configurazione, vai al login
+            // Reindirizza al login dopo configurazione completata
             return "redirect:/login";
             
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", 
-                "Errore di configurazione: " + e.getMessage());
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Errore di configurazione: " + e.getMessage()
+            );
             return "redirect:/index";
         }
     }

@@ -5,8 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * Configurazione delle proprietà di autenticazione dell'applicazione.
- * Utilizzato per mappare le proprietà con prefisso "app.auth" da application.properties.
+ * Classe di configurazione per le proprietà di autenticazione dell'applicazione.
+ * Mappa automaticamente le proprietà con prefisso "app.auth" dal file application.properties.
  *
  * @author Michael Leanza
  * @since 1.0

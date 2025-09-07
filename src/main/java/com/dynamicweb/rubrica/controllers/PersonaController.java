@@ -11,12 +11,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * Controller per la gestione delle persone (CRUD operations).
+ * Controller per la gestione delle operazioni CRUD sulle persone.
  * 
- * <p>Questo controller gestisce tutte le operazioni relative alle persone:
- * visualizzazione lista, creazione, modifica ed eliminazione.</p>
- * 
- * <p>L'accesso alla lista persone richiede autenticazione obbligatoria.</p>
+ * <p>Fornisce endpoint per visualizzazione, creazione, modifica ed eliminazione
+ * delle persone con autenticazione obbligatoria per l'accesso alla lista.</p>
  * 
  * @author Michael Leanza
  * @since 1.0
@@ -27,28 +25,36 @@ public class PersonaController {
     private final PersonaService personaService;
     private final AuthService authService;
 
+    /**
+     * Costruttore per l'injection dei servizi necessari.
+     * 
+     * @param personaService servizio per operazioni CRUD sulle persone
+     * @param authService servizio per la gestione dell'autenticazione
+     */
     public PersonaController(PersonaService personaService, AuthService authService) {
         this.personaService = personaService;
         this.authService = authService;
     }
     
     /**
-     * Visualizza la lista delle persone.
+     * Mostra la lista delle persone registrate.
      * 
-     * <p>URL: http://localhost:8080/lista</p>
-     * <p>Richiede autenticazione obbligatoria.</p>
+     * <p>Richiede autenticazione obbligatoria. Se l'utente non è autenticato,
+     * viene reindirizzato alla pagina di login.</p>
      * 
-     * @param model il model per passare dati alla vista
-     * @param redirectAttributes attributi per i messaggi di redirect
-     * @param session la sessione HTTP per verificare l'autenticazione
-     * @return la vista "lista" o redirect al login se non autenticato
+     * @param model model per passare dati alla vista
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @param session sessione HTTP per verifica autenticazione
+     * @return vista "lista" se autenticato, altrimenti redirect a /login
      */
     @GetMapping("/lista")
     public String listPersons(Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         // Verifica autenticazione - OBBLIGATORIA per accedere alla lista
         if (!authService.isLoggedIn(session)) {
-            redirectAttributes.addFlashAttribute("errorMessage", 
-                "Devi effettuare il login per accedere alla lista persone");
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Devi effettuare il login per accedere alla lista persone"
+            );
             return "redirect:/login";
         }
         
@@ -64,14 +70,27 @@ public class PersonaController {
         }
     }
     
-    // Show form for new person
+    /**
+     * Mostra il form per creare una nuova persona.
+     * 
+     * @param model model per passare oggetto persona vuoto alla vista
+     * @param redirectAttributes attributi per messaggi flash (non utilizzato)
+     * @return vista "editor" con form vuoto
+     */
     @GetMapping("/editor")
     public String newPerson(Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("person", new Persona());
         return "editor";
     }
 
-    // Show form to edit person
+    /**
+     * Mostra il form per modificare una persona esistente.
+     * 
+     * @param id ID della persona da modificare
+     * @param model model per passare dati alla vista
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return vista "editor" con dati persona, altrimenti redirect a /lista
+     */
     @GetMapping("/editor/{id}")
     public String editPerson(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -86,29 +105,45 @@ public class PersonaController {
         }
     }
 
-    // Save person (insert or update)
+    /**
+     * Salva o aggiorna una persona (insert/update).
+     * 
+     * <p>Se la persona ha un ID, viene aggiornata; altrimenti viene creata una nuova.</p>
+     * 
+     * @param person oggetto persona dal form
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return redirect a /lista con messaggio di successo o errore
+     */
     @PostMapping("/salva")
     public String savePerson(@ModelAttribute Persona person, RedirectAttributes redirectAttributes) {
         try {
-            boolean success;
-            String operation;
-            
             if (person.getId() != null) {
                 // Update existing person
-                success = personaService.updatePerson(person);
-                operation = "aggiornata";
+                if (personaService.updatePerson(person)) {
+                    redirectAttributes.addFlashAttribute(
+                        "successMessage", 
+                        "Persona aggiornata con successo!"
+                    );
+                } else {
+                    redirectAttributes.addFlashAttribute(
+                        "errorMessage", 
+                        "Errore durante l'aggiornamento della persona!"
+                    );
+                }
             } else {
                 // Insert new person
-                success = personaService.savePerson(person);
-                operation = "salvata";
+                if (personaService.savePerson(person)) {
+                    redirectAttributes.addFlashAttribute(
+                        "successMessage", 
+                        "Persona salvata con successo!"
+                    );
+                } else {
+                    redirectAttributes.addFlashAttribute(
+                        "errorMessage", 
+                        "Errore durante il salvataggio della persona!"
+                    );
+                }
             }
-            
-            String message = success ? 
-                "Persona " + operation + " con successo!" :
-                "Errore durante l'operazione sulla persona!";
-            
-            String messageType = success ? "successMessage" : "errorMessage";
-            redirectAttributes.addFlashAttribute(messageType, message);
             
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute(
@@ -119,7 +154,13 @@ public class PersonaController {
         return "redirect:/lista";
     }
     
-    // Delete person
+    /**
+     * Elimina una persona dal database.
+     * 
+     * @param id ID della persona da eliminare
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return redirect a /lista con messaggio di successo o errore
+     */
     @GetMapping("/elimina/{id}")
     public String deletePerson(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
