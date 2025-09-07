@@ -1,7 +1,7 @@
-package com.michaelleanza.rubrica.controllers;
+package com.dynamicweb.rubrica.controllers;
 
-import com.michaelleanza.rubrica.dtos.DatabaseConfig;
-import com.michaelleanza.rubrica.services.DataSourceService;
+import com.dynamicweb.rubrica.dtos.DatabaseConfig;
+import com.dynamicweb.rubrica.services.DataSourceService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;

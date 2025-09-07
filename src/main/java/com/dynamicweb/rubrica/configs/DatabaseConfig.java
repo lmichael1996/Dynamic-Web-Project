@@ -1,4 +1,4 @@
-package com.michaelleanza.rubrica.configs;
+package com.dynamicweb.rubrica.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

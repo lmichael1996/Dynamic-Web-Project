@@ -1,7 +1,7 @@
-package com.michaelleanza.rubrica.services;
+package com.dynamicweb.rubrica.services;
 
-import com.michaelleanza.rubrica.entities.Persona;
-import com.michaelleanza.rubrica.repositories.PersonaRepository;
+import com.dynamicweb.rubrica.entities.Persona;
+import com.dynamicweb.rubrica.repositories.PersonaRepository;
 
 import org.springframework.stereotype.Service;
 

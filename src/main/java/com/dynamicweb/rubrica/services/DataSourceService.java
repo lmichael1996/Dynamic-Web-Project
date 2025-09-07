@@ -1,6 +1,6 @@
-package com.michaelleanza.rubrica.services;
+package com.dynamicweb.rubrica.services;
 
-import com.michaelleanza.rubrica.dtos.DatabaseConfig;
+import com.dynamicweb.rubrica.dtos.DatabaseConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;

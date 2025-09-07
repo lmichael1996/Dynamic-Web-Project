@@ -1,4 +1,4 @@
-package com.michaelleanza.rubrica.configs;
+package com.dynamicweb.rubrica.configs;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

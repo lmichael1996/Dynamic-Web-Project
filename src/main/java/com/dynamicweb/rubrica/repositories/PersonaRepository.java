@@ -1,10 +1,10 @@
-package com.michaelleanza.rubrica.repositories;
+package com.dynamicweb.rubrica.repositories;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.michaelleanza.rubrica.entities.Persona;
+import com.dynamicweb.rubrica.entities.Persona;
 
 import java.util.List;
 

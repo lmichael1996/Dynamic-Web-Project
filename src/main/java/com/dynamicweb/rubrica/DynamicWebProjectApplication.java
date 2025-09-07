@@ -1,4 +1,4 @@
-package com.michaelleanza.rubrica;
+package com.dynamicweb.rubrica;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

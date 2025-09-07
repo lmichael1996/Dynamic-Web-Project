@@ -1,4 +1,4 @@
-package com.michaelleanza.rubrica.dtos;
+package com.dynamicweb.rubrica.dtos;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;

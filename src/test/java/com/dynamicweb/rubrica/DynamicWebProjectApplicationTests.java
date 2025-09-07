@@ -1,4 +1,4 @@
-package com.michaelleanza.rubrica;
+package com.dynamicweb.rubrica;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

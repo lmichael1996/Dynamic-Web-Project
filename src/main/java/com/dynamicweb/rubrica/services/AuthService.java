@@ -1,8 +1,8 @@
-package com.michaelleanza.rubrica.services;
+package com.dynamicweb.rubrica.services;
 
 import org.springframework.stereotype.Service;
 
-import com.michaelleanza.rubrica.configs.AuthProperties;
+import com.dynamicweb.rubrica.configs.AuthProperties;
 
 import jakarta.servlet.http.HttpSession;
 

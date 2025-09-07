@@ -1,8 +1,8 @@
-package com.michaelleanza.rubrica.controllers;
+package com.dynamicweb.rubrica.controllers;
 
-import com.michaelleanza.rubrica.entities.Persona;
-import com.michaelleanza.rubrica.services.PersonaService;
-import com.michaelleanza.rubrica.services.AuthService;
+import com.dynamicweb.rubrica.entities.Persona;
+import com.dynamicweb.rubrica.services.PersonaService;
+import com.dynamicweb.rubrica.services.AuthService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

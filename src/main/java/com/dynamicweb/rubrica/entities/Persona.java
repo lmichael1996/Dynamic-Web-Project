@@ -1,4 +1,4 @@
-package com.michaelleanza.rubrica.entities;
+package com.dynamicweb.rubrica.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
