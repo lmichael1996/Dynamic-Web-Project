@@ -2,7 +2,7 @@
 
 Una applicazione web Spring Boot per la gestione di una rubrica contatti con configurazione dinamica del database e autenticazione sicura basata su variabili di ambiente.
 
-## 🚀 Funzionalità
+## Funzionalità
 
 - **Configurazione dinamica del database MySQL**
 - **Autenticazione sicura con variabili di sistema**
@@ -11,7 +11,7 @@ Una applicazione web Spring Boot per la gestione di una rubrica contatti con con
 - **Validazione avanzata dei dati di input**
 - **Gestione sessioni utente**
 
-## � Configurazione Sicurezza
+## Configurazione Sicurezza
 
 L'applicazione utilizza variabili di sistema per le credenziali di accesso:
 
@@ -25,7 +25,7 @@ export AUTH_PASSWORD=your_secure_password
 # Password: admin123
 ```
 
-## �🛠️ Setup Database con Docker
+## Setup Database con Docker
 
 Per avviare il database MySQL utilizzando Docker:
 
@@ -39,7 +39,7 @@ sudo docker run --name mysql-rubrica \
   -d mysql:8.0
 ```
 
-## 📁 Struttura del Progetto
+## Struttura del Progetto
 
 ```
 Dynamic-Web-Project/
@@ -61,7 +61,7 @@ Dynamic-Web-Project/
 └── README.md                    # Documentazione
 ```
 
-## 🔧 Tecnologie Utilizzate
+## Tecnologie Utilizzate
 
 - **Spring Boot 3.5.5** - Framework principale
 - **Spring MVC** - Pattern architetturale web
@@ -72,7 +72,7 @@ Dynamic-Web-Project/
 - **Lombok** - Riduzione boilerplate code
 - **Docker** - Containerizzazione del database
 
-## 🚀 Avvio dell'Applicazione
+## Avvio dell'Applicazione
 
 1. **Avviare il database MySQL:**
    ```bash
@@ -102,14 +102,14 @@ Dynamic-Web-Project/
 
 4. **Aprire il browser su:** `http://localhost:8080`
 
-## 📝 Flusso dell'Applicazione
+## Flusso dell'Applicazione
 
 1. **Configurazione Database** - Inserire parametri di connessione MySQL
 2. **Test Connessione** - Validazione automatica dei parametri
 3. **Autenticazione** - Login sicuro con credenziali da variabili di ambiente
 4. **Gestione Rubrica** - CRUD completo dei contatti con validazione
 
-## 🔧 Caratteristiche Tecniche
+## Caratteristiche Tecniche
 
 ### Sicurezza
 - Autenticazione basata su variabili di sistema
@@ -126,6 +126,6 @@ Dynamic-Web-Project/
 - Validazione client-side e server-side
 - Messaggi di feedback per l'utente
 
-## 👨‍💻 Autore
+## Autore
 
 **Michael Leanza** - Sviluppo completo dell'applicazione
