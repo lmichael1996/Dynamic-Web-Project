@@ -23,6 +23,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @NoArgsConstructor
 public class DatabaseProperties {
     
+    /** Driver JDBC per MySQL */
+    public static final String MYSQL_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+    
     /** Hostname o indirizzo IP del server MySQL */
     private String host;
     
@@ -130,7 +133,7 @@ public class DatabaseProperties {
     public void testConnection() {    
         try {
             DriverManagerDataSource testDataSource = new DriverManagerDataSource();
-            testDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            testDataSource.setDriverClassName(MYSQL_DRIVER_CLASS);
             testDataSource.setUrl(buildJdbcUrl());
             testDataSource.setUsername(getUsername());
             testDataSource.setPassword(getPassword());

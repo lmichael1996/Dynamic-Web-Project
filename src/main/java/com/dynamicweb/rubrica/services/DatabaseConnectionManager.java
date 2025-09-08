@@ -36,7 +36,7 @@ public class DatabaseConnectionManager {
             newProperties.validateConfiguration();
             newProperties.testConnection();
             // Applica la nuova configurazione al DataSource
-            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSource.setDriverClassName(DatabaseProperties.MYSQL_DRIVER_CLASS);
             dataSource.setUrl(newProperties.buildJdbcUrl());
             dataSource.setUsername(newProperties.getUsername());
             dataSource.setPassword(newProperties.getPassword());
