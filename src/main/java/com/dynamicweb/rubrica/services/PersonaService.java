@@ -33,15 +33,26 @@ public class PersonaService {
     }
 
     /**
-     * Valida un campo controllando sia lunghezza che formato.
+     * Valida un campo controllando null, vuoto, lunghezza e formato.
      * 
      * @param value il valore da validare
      * @param fieldName il nome del campo per i messaggi di errore
      * @param maxLength la lunghezza massima consentita
      * @param pattern il pattern regex da utilizzare
+     * @param required se true, il campo è obbligatorio (non può essere null o vuoto)
      * @throws IllegalArgumentException se il valore non è valido
      */
-    private void validateField(String value, String fieldName, int maxLength, String pattern) {
+    private void validateField(String value, String fieldName, int maxLength, String pattern, boolean required) {
+        // Controllo obbligatorietà (null e vuoti)
+        if (required && (value == null || value.isEmpty())) {
+            throw new IllegalArgumentException("Il " + fieldName + " è obbligatorio");
+        }
+        
+        // Se il campo è opzionale e null/vuoto, non validare ulteriormente
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+        
         // Controllo lunghezza
         if (value.length() > maxLength) {
             throw new IllegalArgumentException("Il " + fieldName + " non può superare i " + maxLength + " caratteri");
@@ -60,43 +71,35 @@ public class PersonaService {
      * @throws IllegalArgumentException se uno o più campi non sono validi
      */
     private void validatePersona(Persona persona) {
-        // Controlli comuni per campi obbligatori (null e vuoti)
-        if (persona.getNome() == null || persona.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Il nome è obbligatorio");
-        }
-        
-        if (persona.getCognome() == null || persona.getCognome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Il cognome è obbligatorio");
-        }
-        
-        if (persona.getTelefono() == null || persona.getTelefono().trim().isEmpty()) {
-            throw new IllegalArgumentException("Il telefono è obbligatorio");
-        }
-        
-        // Validazioni complete per ogni campo
+        // Validazioni complete per ogni campo (inclusi controlli null/vuoti)
         validateField(
             persona.getNome(), 
             "nome", 
             100, 
-            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
+            "^[a-zA-ZÀ-ÿ\\s'.-]+$",
+            true); // obbligatorio
+            
         validateField(
             persona.getCognome(), 
             "cognome", 
             100, 
-            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
+            "^[a-zA-ZÀ-ÿ\\s'.-]+$",
+            true); // obbligatorio
+            
         validateField(
             persona.getTelefono(), 
             "telefono", 
             20, 
-            "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$");
+            "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$",
+            true); // obbligatorio
 
-        if (persona.getIndirizzo() != null && !persona.getIndirizzo().isEmpty()) {
-            validateField(
-                persona.getIndirizzo(), 
-                "indirizzo", 
-                255, 
-                "^[a-zA-ZÀ-ÿ0-9\\s,.'-]+$");
-        }
+        // Campo indirizzo opzionale
+        validateField(
+            persona.getIndirizzo(), 
+            "indirizzo", 
+            255, 
+            "^[a-zA-ZÀ-ÿ0-9\\s,.'-]+$",
+            false); // opzionale
 
         // Validazione età (opzionale)
         if (persona.getEta() != null) {
