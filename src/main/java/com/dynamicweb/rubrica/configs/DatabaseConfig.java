@@ -39,5 +39,5 @@ public class DatabaseConfig {
     @Primary
     public JdbcTemplate jdbcTemplate(DriverManagerDataSource dataSource) {
         return new JdbcTemplate(dataSource);
-    }   
+    }
 }

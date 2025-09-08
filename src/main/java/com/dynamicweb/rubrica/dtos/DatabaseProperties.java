@@ -57,17 +57,28 @@ public class DatabaseProperties {
     }
 
     /**
-     * Metodo helper per la validazione di pattern regex.
+     * Metodo helper unificato per la validazione di lunghezza e pattern regex.
      * 
-     * <p>Compila il pattern regex e verifica se la stringa fornita corrisponde.
-     * Utilizzato internamente per validare i vari campi della configurazione database.</p>
+     * <p>Valida contemporaneamente la lunghezza massima e il formato di una stringa
+     * utilizzando un pattern regex. Utilizzato per semplificare la validazione
+     * dei vari campi della configurazione database.</p>
      * 
-     * @param regex il pattern regex da utilizzare per la validazione
-     * @param value la stringa da validare contro il pattern
-     * @return {@code true} se la stringa corrisponde al pattern, {@code false} altrimenti
+     * @param value la stringa da validare
+     * @param fieldName il nome del campo per i messaggi di errore
+     * @param maxLength la lunghezza massima consentita
+     * @param regex il pattern regex da utilizzare per la validazione del formato
+     * @throws IllegalArgumentException se la validazione fallisce
      */
-    private boolean pattern(String regex, String value) {
-        return Pattern.compile(regex).matcher(value).matches();
+    private void validateFieldFormat(String value, String fieldName, int maxLength, String regex) {
+        // Controllo lunghezza
+        if (value.length() > maxLength) {
+            throw new IllegalArgumentException(fieldName + " troppo lungo: massimo " + maxLength + " caratteri");
+        }
+        
+        // Controllo pattern
+        if (!Pattern.compile(regex).matcher(value.trim()).matches()) {
+            throw new IllegalArgumentException(fieldName + " non valido: " + value);
+        }
     }
     
     /**
@@ -79,45 +90,31 @@ public class DatabaseProperties {
      * @throws IllegalArgumentException se uno o più parametri non sono validi
      */
     public void validateConfiguration() {
-        // 1. Controlli lunghezza stringhe
-        if (host.length() > 255) {
-            throw new IllegalArgumentException("Host troppo lungo: massimo 255 caratteri");
-        }
-        if (dbName.length() > 64) {
-            throw new IllegalArgumentException("Nome database troppo lungo: massimo 64 caratteri");
-        }
-        if (username.length() > 32) {
-            throw new IllegalArgumentException("Username troppo lungo: massimo 32 caratteri");
-        }
-        if (password.length() > 128) {
-            throw new IllegalArgumentException("Password troppo lunga: massimo 128 caratteri");
-        }
-
-        // 2. Validazione porta
+        // Validazione porta
         if (port < 1 || port > 65535) {
             throw new IllegalArgumentException("Porta non valida: " + port);
         }
 
-        // 3. Validazione formato host (hostname/IP)
+        // Validazioni unificate con controllo lunghezza e pattern
+        
+        // Host (hostname/IP)
         String hostPattern = "^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)*)?" +
                 "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$|" +
                 "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
                 "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        validateFieldFormat(host, "Host", 255, hostPattern);
 
-        if (!pattern(hostPattern, host.trim())) {
-            throw new IllegalArgumentException("Host non valido: " + host);
-        }
-
-        // 4. Validazione formato nome database
+        // Nome database
         String dbPattern = "^[a-zA-Z_][a-zA-Z0-9_]{0,63}$";
-        if (!pattern(dbPattern, dbName.trim())) {
-            throw new IllegalArgumentException("Nome database non valido: " + dbName);
-        }
+        validateFieldFormat(dbName, "Nome database", 64, dbPattern);
 
-        // 5. Validazione formato username
+        // Username
         String usernamePattern = "^[a-zA-Z0-9_@.-]+$";
-        if (!pattern(usernamePattern, username.trim())) {
-            throw new IllegalArgumentException("Username non valido: " + username);
+        validateFieldFormat(username, "Username", 32, usernamePattern);
+
+        // Password (solo controllo lunghezza)
+        if (password.length() > 128) {
+            throw new IllegalArgumentException("Password troppo lunga: massimo 128 caratteri");
         }
     }    
     

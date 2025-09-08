@@ -37,6 +37,60 @@ public class PersonaService {
     }
 
     /**
+     * Valida un campo controllando sia lunghezza che formato.
+     * 
+     * @param value il valore da validare
+     * @param fieldName il nome del campo per i messaggi di errore
+     * @param maxLength la lunghezza massima consentita
+     * @param pattern il pattern regex da utilizzare
+     * @throws IllegalArgumentException se il valore non è valido
+     */
+    private void validateField(String value, String fieldName, int maxLength, String pattern) {
+        // Controllo lunghezza
+        if (value.length() > maxLength) {
+            throw new IllegalArgumentException("Il " + fieldName + " non può superare i " + maxLength + " caratteri");
+        }
+        
+        // Controllo pattern
+        if (!value.matches(pattern)) {
+            throw new IllegalArgumentException("Il " + fieldName + " contiene caratteri non validi o formato errato");
+        }
+    }
+
+    /**
+     * Valida tutti i campi della persona.
+     * 
+     * @param persona la persona da validare
+     * @throws IllegalArgumentException se uno o più campi non sono validi
+     */
+    private void validatePersona(Persona persona) {
+        // Validazioni complete per ogni campo
+        validateField(
+            persona.getNome(), 
+            "nome", 
+            100, 
+            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
+        validateField(
+            persona.getCognome(), 
+            "cognome", 
+            100, 
+            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
+        validateField(
+            persona.getTelefono(), 
+            "telefono", 
+            20, 
+            "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$");
+
+        if (persona.getIndirizzo() != null) {
+            validateField(
+                persona.getIndirizzo(), 
+                "indirizzo", 
+                255, 
+                "^[a-zA-ZÀ-ÿ0-9\\s,.'-]+$");
+        }
+    }
+
+    /**
      * Recupera tutte le persone presenti nel database.
      * 
      * @return lista di tutte le persone, vuota se non ce ne sono
@@ -113,59 +167,5 @@ public class PersonaService {
             throw new IllegalArgumentException("ID persona non valido: " + id);
         }
         return personaRepository.deleteById(id);
-    }
-    
-    /**
-     * Valida tutti i campi della persona.
-     * 
-     * @param persona la persona da validare
-     * @throws IllegalArgumentException se uno o più campi non sono validi
-     */
-    private void validatePersona(Persona persona) {
-        // Validazioni complete per ogni campo
-        validateField(
-            persona.getNome(), 
-            "nome", 
-            100, 
-            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
-        validateField(
-            persona.getCognome(), 
-            "cognome", 
-            100, 
-            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
-        validateField(
-            persona.getTelefono(), 
-            "telefono", 
-            20, 
-            "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$");
-
-        if (persona.getIndirizzo() != null) {
-            validateField(
-                persona.getIndirizzo(), 
-                "indirizzo", 
-                255, 
-                "^[a-zA-ZÀ-ÿ0-9\\s,.'-]+$");
-        }
-    }
-
-    /**
-     * Valida un campo controllando sia lunghezza che formato.
-     * 
-     * @param value il valore da validare
-     * @param fieldName il nome del campo per i messaggi di errore
-     * @param maxLength la lunghezza massima consentita
-     * @param pattern il pattern regex da utilizzare
-     * @throws IllegalArgumentException se il valore non è valido
-     */
-    private void validateField(String value, String fieldName, int maxLength, String pattern) {
-        // Controllo lunghezza
-        if (value.length() > maxLength) {
-            throw new IllegalArgumentException("Il " + fieldName + " non può superare i " + maxLength + " caratteri");
-        }
-        
-        // Controllo pattern
-        if (!value.matches(pattern)) {
-            throw new IllegalArgumentException("Il " + fieldName + " contiene caratteri non validi o formato errato");
-        }
     }
 }

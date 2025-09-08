@@ -54,7 +54,6 @@ public class PersonaRepository {
      * @return oggetto Persona corrispondente all'ID
      * @throws org.springframework.dao.EmptyResultDataAccessException se non trovata
      */
-
     public Persona findById(Long id) {
         String sql = "SELECT * FROM lista_contatti WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Persona.class), id);
