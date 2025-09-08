@@ -29,7 +29,7 @@
             </div>
         </c:if>
 
-        <a href="${pageContext.request.contextPath}/editor" class="btn btn-primary mb-3">Aggiungi Nuovo</a>
+        <a href="${pageContext.request.contextPath}/editor" class="btn btn-primary mb-3">Nuovo</a>
 
         <table class="table table-striped table-hover">
             <thead class="table-dark">

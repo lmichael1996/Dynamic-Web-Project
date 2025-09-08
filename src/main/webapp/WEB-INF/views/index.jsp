@@ -53,7 +53,7 @@
                                 <form:input type="password" class="form-control" id="password" path="password" required="true"/>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary">Configura</button>
+                            <button type="submit" class="btn btn-primary">Procedi</button>
                         </form:form>
                     </div>
                 </div>

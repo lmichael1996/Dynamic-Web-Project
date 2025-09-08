@@ -66,13 +66,10 @@
                     </div>
                     
                     <div class="d-flex gap-2">
-                        <a href="${pageContext.request.contextPath}/lista" class="btn btn-secondary">Annulla</a>
                         <button type="submit" class="btn btn-primary">
-                            <c:choose>
-                                <c:when test="${person.id != null}">Aggiorna</c:when>
-                                <c:otherwise>Salva</c:otherwise>
-                            </c:choose>
+                            Salva
                         </button>
+                        <a href="${pageContext.request.contextPath}/lista" class="btn btn-secondary">Annulla</a>
                     </div>
                 </form>
             </div>
