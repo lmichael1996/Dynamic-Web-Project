@@ -79,7 +79,7 @@ public class PersonaService {
             20, 
             "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$");
 
-        if (persona.getIndirizzo() != null) {
+        if (persona.getIndirizzo() != null && !persona.getIndirizzo().isEmpty()) {
             validateField(
                 persona.getIndirizzo(), 
                 "indirizzo", 
