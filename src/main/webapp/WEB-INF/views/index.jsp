@@ -30,7 +30,7 @@
                                   method="post" modelAttribute="config">
                             <div class="mb-3">
                                 <label for="host" class="form-label">Host</label>
-                                <form:input type="text" class="form-control" id="host" path="host" required/>
+                                <form:input type="text" class="form-control" id="host" path="host" required="true"/>
                             </div>
                             
                             <div class="mb-3">
@@ -39,18 +39,18 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label for="dbName" class="form-label">Database</label>
-                                <form:input type="text" class="form-control" id="dbName" path="dbName" required/>
+                                <label for="dbName" class="form-label">Nome database</label>
+                                <form:input type="text" class="form-control" id="dbName" path="dbName" required="true"/>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <form:input type="text" class="form-control" id="username" path="username" required/>
+                                <label for="username" class="form-label">Username database</label>
+                                <form:input type="text" class="form-control" id="username" path="username" required="true"/>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <form:input type="password" class="form-control" id="password" path="password" required/>
+                                <label for="password" class="form-label">Password database</label>
+                                <form:input type="password" class="form-control" id="password" path="password" required="true"/>
                             </div>
                             
                             <button type="submit" class="btn btn-primary">Configura</button>

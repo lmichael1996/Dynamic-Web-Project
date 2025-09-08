@@ -15,13 +15,11 @@
                 <h4>Login</h4>
                 
                 <!-- Messaggi -->
-                <c:if test="${not empty successMessage}">
-                    <div class="alert alert-success">${successMessage}</div>
-                </c:if>
                 <c:if test="${not empty errorMessage}">
                     <div class="alert alert-danger">${errorMessage}</div>
                 </c:if>
 
+                <!-- Card per il modulo di login -->
                 <div class="card">
                     <div class="card-body">
                         <form action="${pageContext.request.contextPath}/login" method="post">
