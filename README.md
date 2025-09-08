@@ -11,7 +11,7 @@ Una applicazione web Spring Boot per la gestione di una rubrica contatti con con
 
 ## Setup e Avvio
 
-1. **Avviare il database MySQL su docker:**
+1. **Avviare il database MySQL con Docker:**
    ```bash
    docker run --name mysql-rubrica \
      -e MYSQL_ROOT_PASSWORD=root \
@@ -22,13 +22,20 @@ Una applicazione web Spring Boot per la gestione di una rubrica contatti con con
      -d mysql:8.0
    ```
 
-2. **Avviare l'applicazione per il testing**
+2. **Configurare variabili di ambiente (opzionale):**
+   ```bash
+   export AUTH_USERNAME=your_admin_username
+   export AUTH_PASSWORD=your_secure_password
+   ```
+
+3. **Avviare l'applicazione:**
    ```bash
    ./mvnw spring-boot:run
    ```
 
-3. **Aprire il browser su:** `http://localhost:8080`
-  Prend i dati user e password su varia ... altrimenti
+4. **Aprire il browser su:** `http://localhost:8080`
+   
+   **Credenziali di accesso (default se variabili di ambiente non impostate):**
    - Username: `admin`
    - Password: `admin123`
 
