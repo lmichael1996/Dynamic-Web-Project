@@ -11,7 +11,7 @@ Una applicazione web Spring Boot per la gestione di una rubrica contatti con con
 
 ## Setup e Avvio
 
-1. **Avviare il database MySQL:**
+1. **Avviare il database MySQL su docker:**
    ```bash
    docker run --name mysql-rubrica \
      -e MYSQL_ROOT_PASSWORD=root \
@@ -22,12 +22,13 @@ Una applicazione web Spring Boot per la gestione di una rubrica contatti con con
      -d mysql:8.0
    ```
 
-2. **Avviare l'applicazione:**
+2. **Avviare l'applicazione per il testing**
    ```bash
    ./mvnw spring-boot:run
    ```
 
 3. **Aprire il browser su:** `http://localhost:8080`
+  Prend i dati user e password su varia ... altrimenti
    - Username: `admin`
    - Password: `admin123`
 
@@ -35,7 +36,24 @@ Una applicazione web Spring Boot per la gestione di una rubrica contatti con con
 
 ```bash
 ./mvnw clean package
-java -jar target/Dynamic-Web-Project-0.0.1-SNAPSHOT.war
+```
+
+Il file WAR viene generato in `target/dynamic-web-app-0.0.1-SNAPSHOT.war`
+
+### Esecuzione standalone:
+```bash
+java -jar target/dynamic-web-app-0.0.1-SNAPSHOT.war
+```
+
+### Deploy su Tomcat esterno:
+```bash
+# Copia il WAR nella directory webapps di Tomcat
+cp target/dynamic-web-app-0.0.1-SNAPSHOT.war /path/to/tomcat/webapps/rubrica.war
+
+# Avvia Tomcat
+/path/to/tomcat/bin/startup.sh
+
+# Accedi su: http://localhost:8080/rubrica
 ```
 
 ## Tecnologie
@@ -44,6 +62,23 @@ java -jar target/Dynamic-Web-Project-0.0.1-SNAPSHOT.war
 - MySQL 8.0 + Docker
 - JSP + Bootstrap 5
 - Maven
+- Lombok (ottimizzato)
+- HikariCP per connection pooling
+
+## Caratteristiche
+
+- **Autenticazione:** Variabili di ambiente (AUTH_USERNAME, AUTH_PASSWORD)
+- **Database:** Configurazione dinamica runtime con test connessione
+- **Validazione:** Robusta validazione server-side con regex
+- **UI:** Interfaccia responsiva Bootstrap 5 con feedback utente
+- **Packaging:** WAR deployabile su Tomcat esterno o standalone
+
+## Note
+
+- Database MySQL richiesto (configurabile via Docker)
+- Porta default: 8080
+- Credenziali default: admin/admin123 (se variabili di ambiente non impostate)
+- Campo indirizzo opzionale nella gestione contatti
 
 ## Autore
 
