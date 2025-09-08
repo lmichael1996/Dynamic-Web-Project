@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Application logs ###
+*.log
+app.log
+nohup.out
