@@ -1,23 +1,30 @@
-package com.dynamicweb.rubrica.configs;
+package com.dynamicweb.rubrica.components;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
  * Configurazione per le proprietà di autenticazione dell'applicazione.
- * Mappa automaticamente le proprietà con prefisso "app.auth" dal file application.properties.
+ * Legge username e password dalle variabili di sistema per maggiore sicurezza.
  *
  * @author Michael Leanza
  * @since 1.0
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "app.auth")
 public class AuthProperties {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
+
+    /**
+     * Costruttore che inizializza le credenziali dalle variabili di sistema.
+     * Se le variabili non sono impostate, usa valori di default.
+     */
+    public AuthProperties() {
+        this.username = System.getenv().getOrDefault("AUTH_USERNAME", "admin");
+        this.password = System.getenv().getOrDefault("AUTH_PASSWORD", "admin123");
+    }
 
     /**
      * Verifica se le credenziali corrispondono a quelle configurate.
