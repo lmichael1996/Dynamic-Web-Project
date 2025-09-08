@@ -35,7 +35,7 @@
                             
                             <div class="mb-3">
                                 <label for="port" class="form-label">Porta</label>
-                                <form:input type="number" class="form-control" id="port" path="port" min="1" max="65535"/>
+                                <form:input type="number" class="form-control" id="port" path="port" value="1" min="1" max="65535"/>
                             </div>
                             
                             <div class="mb-3">
