@@ -1,4 +1,3 @@
-
 package com.dynamicweb.rubrica.services;
 
 import com.dynamicweb.rubrica.dtos.DatabaseProperties;
@@ -62,8 +61,8 @@ public class DatabaseConnectionManager {
         String password = dataSource.getPassword();
         
         // Verifica che i valori essenziali siano presenti e non vuoti
-        return url != null && !url.trim().isEmpty() &&
-               username != null && !username.trim().isEmpty() &&
-               password != null;
+        return url != null && !url.isEmpty() &&
+               username != null && !username.isEmpty() &&
+               password != null && !password.isEmpty();
     }
 }

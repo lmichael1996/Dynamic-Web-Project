@@ -122,41 +122,50 @@ public class PersonaService {
      * @throws IllegalArgumentException se uno o più campi non sono validi
      */
     private void validatePersona(Persona persona) {
-        validateNameField(persona.getNome(), "nome");
-        validateNameField(persona.getCognome(), "cognome");
-        validateTelefono(persona.getTelefono());
+        // Validazioni complete per ogni campo
+        validateField(
+            persona.getNome(), 
+            "nome", 
+            100, 
+            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
+        validateField(
+            persona.getCognome(), 
+            "cognome", 
+            100, 
+            "^[a-zA-ZÀ-ÿ\\s'.-]+$");
+        validateField(
+            persona.getTelefono(), 
+            "telefono", 
+            20, 
+            "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$");
+
+        if (persona.getIndirizzo() != null) {
+            validateField(
+                persona.getIndirizzo(), 
+                "indirizzo", 
+                255, 
+                "^[a-zA-ZÀ-ÿ0-9\\s,.'-]+$");
+        }
     }
-    
+
     /**
-     * Valida un campo nome/cognome generico.
+     * Valida un campo controllando sia lunghezza che formato.
      * 
      * @param value il valore da validare
      * @param fieldName il nome del campo per i messaggi di errore
+     * @param maxLength la lunghezza massima consentita
+     * @param pattern il pattern regex da utilizzare
      * @throws IllegalArgumentException se il valore non è valido
      */
-    private void validateNameField(String value, String fieldName) {
-        if (value.trim().length() > 100) {
-            throw new IllegalArgumentException("Il " + fieldName + " non può superare i 100 caratteri");
+    private void validateField(String value, String fieldName, int maxLength, String pattern) {
+        // Controllo lunghezza
+        if (value.length() > maxLength) {
+            throw new IllegalArgumentException("Il " + fieldName + " non può superare i " + maxLength + " caratteri");
         }
-        if (!value.trim().matches("^[a-zA-ZÀ-ÿ\\s'.-]+$")) {
-            throw new IllegalArgumentException("Il " + fieldName + " contiene caratteri non validi");
-        }
-    }
-    
-    /**
-     * Valida il telefono della persona.
-     * 
-     * @param telefono il telefono da validare
-     * @throws IllegalArgumentException se il telefono non è valido
-     */
-    private void validateTelefono(String telefono) {
-        if (telefono.trim().length() > 20) {
-            throw new IllegalArgumentException("Il telefono non può superare i 20 caratteri");
-        }
-        // Pattern per telefono italiano (con o senza prefisso internazionale)
-        String phonePattern = "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$";
-        if (!telefono.trim().replaceAll("\\s+", "").matches(phonePattern)) {
-            throw new IllegalArgumentException("Formato telefono non valido");
+        
+        // Controllo pattern
+        if (!value.matches(pattern)) {
+            throw new IllegalArgumentException("Il " + fieldName + " contiene caratteri non validi o formato errato");
         }
     }
 }

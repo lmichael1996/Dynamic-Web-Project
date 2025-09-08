@@ -3,7 +3,9 @@ package com.dynamicweb.rubrica.controllers;
 import com.dynamicweb.rubrica.services.AuthService;
 import com.dynamicweb.rubrica.services.DatabaseConnectionManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
@@ -24,11 +26,28 @@ public class AuthController {
      * Costruttore per l'injection dei servizi di autenticazione e database.
      * 
      * @param authService servizio per le operazioni di autenticazione
-     * @param databaseConnectionManager manager per verificare la configurazione database
+     * @param databaseConnectionManager servizio per verificare la configurazione del database
      */
     public AuthController(AuthService authService, DatabaseConnectionManager databaseConnectionManager) {
         this.authService = authService;
         this.databaseConnectionManager = databaseConnectionManager;
+    }
+    
+    /**
+     * Verifica i prerequisiti di accesso (database configurato).
+     * 
+     * @param redirectAttributes attributi per messaggi flash tra redirect
+     * @return stringa di redirect se i prerequisiti non sono soddisfatti, null altrimenti
+     */
+    private String checkAccessPrerequisites(RedirectAttributes redirectAttributes) {
+        if (!databaseConnectionManager.isDatabaseConfigured()) {
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", 
+                "Database non configurato. Configura prima la connessione al database."
+            );
+            return "redirect:/index";
+        }
+        return null;
     }
     
     /**
@@ -39,13 +58,10 @@ public class AuthController {
      */
     @GetMapping("/login")
     public String loginPage(RedirectAttributes redirectAttributes) {
-        // Verifica che il database sia configurato
-        if (!databaseConnectionManager.isDatabaseConfigured()) {
-            redirectAttributes.addFlashAttribute(
-                "errorMessage", 
-                "Database non configurato. Configura prima la connessione al database."
-            );
-            return "redirect:/index";
+        // Verifica prerequisiti di accesso
+        String prerequisiteCheck = checkAccessPrerequisites(redirectAttributes);
+        if (prerequisiteCheck != null) {
+            return prerequisiteCheck;
         }
         
         return "login";
@@ -62,17 +78,14 @@ public class AuthController {
      */
     @PostMapping("/login")
     public String processLogin(
-            @RequestParam String username, 
-            @RequestParam String password,
-            HttpSession session,
-            RedirectAttributes redirectAttributes) {
-        // Verifica che il database sia configurato prima del login
-        if (!databaseConnectionManager.isDatabaseConfigured()) {
-            redirectAttributes.addFlashAttribute(
-                "errorMessage", 
-                "Database non configurato. Configura prima la connessione al database."
-            );
-            return "redirect:/index";
+        @RequestParam String username, 
+        @RequestParam String password,
+        HttpSession session,
+        RedirectAttributes redirectAttributes) {
+        // Verifica prerequisiti di accesso
+        String prerequisiteCheck = checkAccessPrerequisites(redirectAttributes);
+        if (prerequisiteCheck != null) {
+            return prerequisiteCheck;
         }
         
         // Procede con l'autenticazione

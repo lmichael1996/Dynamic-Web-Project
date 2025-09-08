@@ -3,17 +3,14 @@ package com.dynamicweb.rubrica.dtos;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.sql.Connection;
 import java.util.regex.Pattern;
-
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
  * DTO per le proprietà di configurazione del database MySQL.
- * 
- * <p>Contiene i parametri necessari per stabilire una connessione al database
- * e fornisce metodi per validazione e test della connettività.</p>
+ * Contiene i parametri necessari per stabilire una connessione al database
+ * e fornisce metodi per validazione e test della connettività.
  * 
  * <p>Include validazione per hostname/IP, porta, nome database, username e password
  * secondo le regole di MySQL.</p>
@@ -51,13 +48,26 @@ public class DatabaseProperties {
      * @throws IllegalArgumentException se la configurazione non è valida
      */
     public String buildJdbcUrl() {
-        validateConfiguration();
         return String.format(
             "jdbc:mysql://%s:%d/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", 
             host, 
             port, 
             dbName
         );
+    }
+
+    /**
+     * Metodo helper per la validazione di pattern regex.
+     * 
+     * <p>Compila il pattern regex e verifica se la stringa fornita corrisponde.
+     * Utilizzato internamente per validare i vari campi della configurazione database.</p>
+     * 
+     * @param regex il pattern regex da utilizzare per la validazione
+     * @param value la stringa da validare contro il pattern
+     * @return {@code true} se la stringa corrisponde al pattern, {@code false} altrimenti
+     */
+    private boolean pattern(String regex, String value) {
+        return Pattern.compile(regex).matcher(value).matches();
     }
     
     /**
@@ -69,104 +79,47 @@ public class DatabaseProperties {
      * @throws IllegalArgumentException se uno o più parametri non sono validi
      */
     public void validateConfiguration() {
-        if (!isValidHost(host)) {
-            throw new IllegalArgumentException("Host non valido: " + host);
+        // 1. Controlli lunghezza stringhe
+        if (host.length() > 255) {
+            throw new IllegalArgumentException("Host troppo lungo: massimo 255 caratteri");
         }
-        
-        if (!isValidPort(port)) {
+        if (dbName.length() > 64) {
+            throw new IllegalArgumentException("Nome database troppo lungo: massimo 64 caratteri");
+        }
+        if (username.length() > 32) {
+            throw new IllegalArgumentException("Username troppo lungo: massimo 32 caratteri");
+        }
+        if (password.length() > 128) {
+            throw new IllegalArgumentException("Password troppo lunga: massimo 128 caratteri");
+        }
+
+        // 2. Validazione porta
+        if (port < 1 || port > 65535) {
             throw new IllegalArgumentException("Porta non valida: " + port);
         }
-        
-        if (!isValidDatabaseName(dbName)) {
+
+        // 3. Validazione formato host (hostname/IP)
+        String hostPattern = "^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)*)?" +
+                "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$|" +
+                "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
+                "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+
+        if (!pattern(hostPattern, host.trim())) {
+            throw new IllegalArgumentException("Host non valido: " + host);
+        }
+
+        // 4. Validazione formato nome database
+        String dbPattern = "^[a-zA-Z_][a-zA-Z0-9_]{0,63}$";
+        if (!pattern(dbPattern, dbName.trim())) {
             throw new IllegalArgumentException("Nome database non valido: " + dbName);
         }
-        
-        if (!isValidUsername(username)) {
+
+        // 5. Validazione formato username
+        String usernamePattern = "^[a-zA-Z0-9_@.-]+$";
+        if (!pattern(usernamePattern, username.trim())) {
             throw new IllegalArgumentException("Username non valido: " + username);
         }
-        
-        if (!isValidPassword(password)) {
-            throw new IllegalArgumentException("Password non valida");
-        }
-    }
-
-    /**
-     * Valida l'hostname o indirizzo IP del server.
-     * 
-     * <p>Accetta hostname validi (RFC 952/1123) e indirizzi IPv4.
-     * Esempi validi: localhost, example.com, 192.168.1.1</p>
-     * 
-     * @param host hostname o IP da validare
-     * @return true se l'host è valido, false altrimenti
-     */
-    private boolean isValidHost(String host) {
-        // Pattern per validare hostname o IP
-        String hostPattern = "^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)*)?" +
-                           "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$|" +
-                           "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
-                           "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-        
-        return Pattern.compile(hostPattern).matcher(host.trim()).matches();
-    }
-    
-    /**
-     * Valida la porta del server MySQL.
-     * 
-     * <p>La porta deve essere nell'intervallo valido 1-65535.
-     * La porta standard di MySQL è 3306.</p>
-     * 
-     * @param port numero di porta da validare
-     * @return true se la porta è valida, false altrimenti
-     */
-    private boolean isValidPort(Integer port) {
-        return port >= 1 && port <= 65535;
-    }
-    
-    /**
-     * Valida il nome del database MySQL.
-     * 
-     * <p>Regole MySQL: deve iniziare con lettera o underscore,
-     * può contenere lettere, numeri e underscore, massimo 64 caratteri.</p>
-     * 
-     * @param dbName nome del database da validare
-     * @return true se il nome è valido, false altrimenti
-     */
-    private boolean isValidDatabaseName(String dbName) {
-        // MySQL database name rules: può contenere lettere, numeri, underscore
-        // Non può iniziare con un numero, lunghezza massima 64 caratteri
-        String dbPattern = "^[a-zA-Z_][a-zA-Z0-9_]{0,63}$";
-        return Pattern.compile(dbPattern).matcher(dbName.trim()).matches();
-    }
-    
-    /**
-     * Valida l'username per la connessione MySQL.
-     * 
-     * <p>Regole MySQL: massimo 32 caratteri, può contenere lettere, numeri,
-     * underscore, chiocciola, punto e trattino.</p>
-     * 
-     * @param username nome utente da validare
-     * @return true se l'username è valido, false altrimenti
-     */
-    private boolean isValidUsername(String username) {
-        // MySQL username rules: massimo 32 caratteri, non può contenere caratteri speciali
-        String usernamePattern = "^[a-zA-Z0-9_@.-]+$";
-        return username.trim().length() <= 32 && 
-               Pattern.compile(usernamePattern).matcher(username.trim()).matches();
-    }
-    
-    /**
-     * Valida la password per la connessione MySQL.
-     * 
-     * <p>La password può essere vuota ma non null, con lunghezza massima di 128 caratteri.
-     * Non vengono applicate altre restrizioni sui caratteri.</p>
-     * 
-     * @param password password da validare
-     * @return true se la password è valida, false altrimenti
-     */
-    private boolean isValidPassword(String password) {
-        // Password può essere vuota ma non null, massimo 128 caratteri
-        return password.length() <= 128;
-    }
+    }    
     
     /**
      * Testa la connettività al database con i parametri configurati.

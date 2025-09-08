@@ -6,13 +6,9 @@ import lombok.AllArgsConstructor;
 
 /**
  * Entità che rappresenta una persona nella rubrica.
- * 
- * <p>Questa classe modella i dati di una persona con tutte le informazioni
- * necessarie per la gestione di una rubrica contatti. Utilizza le annotazioni
- * Lombok per generare automaticamente i metodi boilerplate.</p>
- * 
- * <p>Supporta il pattern Builder per una creazione fluente degli oggetti
- * e fornisce costruttori sia vuoti che con tutti i parametri.</p>
+ * Questa classe modella i dati di una persona con le informazioni essenziali
+ * per la gestione di una rubrica contatti: identificativo, nome, cognome, 
+ * indirizzo, telefono ed età.
  * 
  * @author Michael Leanza
  * @since 1.0

@@ -10,12 +10,11 @@ import java.util.List;
 
 /**
  * Repository per l'accesso ai dati delle persone nel database.
+ * Fornisce operazioni CRUD (Create, Read, Update, Delete) per la gestione
+ * delle persone nella tabella 'lista_contatti' utilizzando JdbcTemplate.
  * 
- * <p>Fornisce operazioni CRUD (Create, Read, Update, Delete) per la gestione
- * delle persone nella tabella 'lista_contatti' utilizzando JdbcTemplate.</p>
- * 
- * <p>Tutti i metodi gestiscono automaticamente le connessioni al database
- * e la mappatura dei risultati verso l'entità Persona.</p>
+ * Tutti i metodi gestiscono automaticamente le connessioni al database
+ * e la mappatura dei risultati verso l'entità Persona.
  * 
  * @author Michael Leanza
  * @since 1.0

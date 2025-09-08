@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -24,39 +25,40 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="${pageContext.request.contextPath}/configure" method="post">
-                    <div class="mb-3">
-                        <label for="host" class="form-label">Host</label>
-                        <input type="text" class="form-control" id="host" name="host" 
-                               value="localhost" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="port" class="form-label">Porta</label>
-                        <input type="number" class="form-control" id="port" name="port" 
-                               value="3306" required min="1" max="65535">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="dbName" class="form-label">Database</label>
-                        <input type="text" class="form-control" id="dbName" name="dbName" 
-                               value="rubrica" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" 
-                               value="rubrica" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" 
-                               value="rubrica">
-                    </div>
-                    
-                        <button type="submit" class="btn btn-primary">Configura</button>
-                    </form>
+                        <form:form action="${pageContext.request.contextPath}/configure" 
+                                  method="post" modelAttribute="config">
+                            <div class="mb-3">
+                                <label for="host" class="form-label">Host</label>
+                                <form:input type="text" class="form-control" id="host" path="host" 
+                                           value="localhost" required="true"/>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="port" class="form-label">Porta</label>
+                                <form:input type="number" class="form-control" id="port" path="port" 
+                                           value="3306" required="true" min="1" max="65535"/>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="dbName" class="form-label">Database</label>
+                                <form:input type="text" class="form-control" id="dbName" path="dbName" 
+                                           value="rubrica" required="true"/>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <form:input type="text" class="form-control" id="username" path="username" 
+                                           value="rubrica" required="true"/>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <form:input type="password" class="form-control" id="password" path="password" 
+                                           value="rubrica"/>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Configura</button>
+                        </form:form>
                     </div>
                 </div>
             </div>
