@@ -42,7 +42,7 @@ public class PersonaController {
         this.personaService = personaService;
         this.databaseConnectionManager = databaseConnectionManager;
         this.authService = authService;
-    }
+        }
     
     /**
      * Verifica i prerequisiti per l'accesso alle funzionalità del controller.
