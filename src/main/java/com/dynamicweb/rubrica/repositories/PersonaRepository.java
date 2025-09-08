@@ -1,12 +1,10 @@
 package com.dynamicweb.rubrica.repositories;
 
+import com.dynamicweb.rubrica.entities.Persona;
+import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import com.dynamicweb.rubrica.entities.Persona;
-
-import java.util.List;
 
 /**
  * Repository per l'accesso ai dati delle persone nel database.

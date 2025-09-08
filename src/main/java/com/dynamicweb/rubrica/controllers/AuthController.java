@@ -2,12 +2,12 @@ package com.dynamicweb.rubrica.controllers;
 
 import com.dynamicweb.rubrica.services.AuthService;
 import com.dynamicweb.rubrica.services.DatabaseConnectionManager;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import jakarta.servlet.http.HttpSession;
 
 /**
  * Controller per la gestione dell'autenticazione degli utenti.

@@ -1,10 +1,10 @@
 package com.dynamicweb.rubrica.dtos;
 
+import java.sql.Connection;
+import java.util.regex.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.sql.Connection;
-import java.util.regex.Pattern;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**

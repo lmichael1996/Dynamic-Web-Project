@@ -2,10 +2,8 @@ package com.dynamicweb.rubrica.services;
 
 import com.dynamicweb.rubrica.entities.Persona;
 import com.dynamicweb.rubrica.repositories.PersonaRepository;
-
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * Servizio per la gestione delle operazioni business relative alle persone.

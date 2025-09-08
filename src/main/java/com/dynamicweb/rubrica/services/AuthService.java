@@ -1,10 +1,8 @@
 package com.dynamicweb.rubrica.services;
 
-import org.springframework.stereotype.Service;
-
 import com.dynamicweb.rubrica.components.AuthProperties;
-
 import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Service;
 
 /**
  * Servizio per la gestione dell'autenticazione dell'applicazione.
