@@ -17,7 +17,7 @@ Applicazione web per la gestione di una rubrica contatti sviluppata con Spring B
 - **Login (/login):** Autenticazione sicura con credenziali
 - **Lista (/lista):** Visualizzazione e gestione contatti esistenti
 - **Editor (/editor):** Inserimento e modifica contatti
-- **Operazioni:** Salvataggio, modifica ed eliminazione diretta dei dati sul lista_contatti
+- **Operazioni:** Salvataggio, aggiornamento ed eliminazione contatti dalla rubrica
 
 ## Configurazione
 
