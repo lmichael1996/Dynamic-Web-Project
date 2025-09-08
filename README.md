@@ -1,15 +1,23 @@
 # Dynamic Web Project
 
-Applicazione web per la gestione di una rubrica contatti sviluppata con Spring Boot. Offre configurazione flessibile del database, autenticazione sicura e interfaccia responsiva.
+Applicazione web per la gestione di una rubrica contatti sviluppata con Spring Boot. Include configurazione database dinamica, autenticazione sicura e interfaccia Bootstrap 5 per operazioni CRUD complete.
 
 ## Caratteristiche
 
 - **CRUD completo:** Gestione completa della rubrica contatti
 - **Autenticazione:** Variabili di ambiente (AUTH_USERNAME, AUTH_PASSWORD)
 - **Database:** MySQL con configurazione dinamica runtime
-- **Validazione:** Server-side robusta con regex
+- **Validazione:** Unificata server-side con controlli null, lunghezza e regex
 - **UI:** Bootstrap 5 responsiva con feedback utente
 - **Deploy:** WAR per Tomcat esterno o standalone
+
+## Pagine dell'applicazione
+
+- **Home (/):** Configurazione database e test connessione
+- **Login (/login):** Autenticazione sicura con credenziali
+- **Lista (/lista):** Visualizzazione e gestione contatti esistenti
+- **Editor (/editor):** Inserimento e modifica contatti
+- **Operazioni:** Salvataggio, modifica ed eliminazione diretta dei dati sul lista_contatti
 
 ## Configurazione
 
