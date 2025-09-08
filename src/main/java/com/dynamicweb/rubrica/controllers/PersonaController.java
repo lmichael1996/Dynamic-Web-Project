@@ -175,7 +175,11 @@ public class PersonaController {
      * @return redirect a /lista se successo, vista "editor" se errore o redirect se prerequisiti non soddisfatti
      */
     @PostMapping("/salva")
-    public String savePerson(@ModelAttribute Persona person, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+    public String savePerson(
+        @ModelAttribute Persona person, 
+        HttpSession session, 
+        RedirectAttributes redirectAttributes, 
+        Model model) {
         // Verifica prerequisiti di accesso
         String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
         if (accessCheck != null) {
@@ -237,7 +241,10 @@ public class PersonaController {
      * @return redirect a /lista con messaggio di esito o redirect se prerequisiti non soddisfatti
      */
     @GetMapping("/elimina/{id}")
-    public String deletePerson(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String deletePerson(
+        @PathVariable Long id, 
+        HttpSession session, 
+        RedirectAttributes redirectAttributes) {
         // Verifica prerequisiti di accesso
         String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
         if (accessCheck != null) {

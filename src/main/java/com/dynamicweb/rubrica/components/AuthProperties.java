@@ -1,6 +1,6 @@
 package com.dynamicweb.rubrica.components;
 
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author Michael Leanza
  * @since 1.0
  */
-@Data
+@Getter
 @Component
 public class AuthProperties {
 

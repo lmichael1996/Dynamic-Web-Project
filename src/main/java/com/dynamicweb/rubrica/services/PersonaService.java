@@ -19,8 +19,6 @@ import java.util.List;
  * 
  * @author Michael Leanza
  * @since 1.0
- * @see Persona
- * @see PersonaRepository
  */
 @Service
 public class PersonaService {
