@@ -13,7 +13,7 @@ Applicazione web per la gestione di una rubrica contatti sviluppata con Spring B
 
 ## Pagine dell'applicazione
 
-- **Home (/):** Configurazione database e test connessione
+- **Index (/):** Configurazione database e test connessione
 - **Login (/login):** Autenticazione sicura con credenziali
 - **Lista (/lista):** Visualizzazione e gestione contatti esistenti
 - **Editor (/editor):** Inserimento e modifica contatti
