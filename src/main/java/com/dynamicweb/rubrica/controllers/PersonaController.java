@@ -25,7 +25,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PersonaController {
     
     private final PersonaService personaService;
+
     private final DatabaseConnectionManager databaseConnectionManager;
+    
     private final AuthService authService;
 
     /**
@@ -86,7 +88,10 @@ public class PersonaController {
      * @return vista "lista" se autenticato, altrimenti redirect appropriato
      */
     @GetMapping("/lista")
-    public String listPersons(Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String listPersons(
+        Model model, 
+        RedirectAttributes redirectAttributes, 
+        HttpSession session) {
         // Verifica prerequisiti di accesso
         String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
         if (accessCheck != null) {
@@ -115,7 +120,10 @@ public class PersonaController {
      * @return vista "editor" con form vuoto o redirect se prerequisiti non soddisfatti
      */
     @GetMapping("/editor")
-    public String newPerson(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String newPerson(
+        Model model, 
+        HttpSession session, 
+        RedirectAttributes redirectAttributes) {
         // Verifica prerequisiti di accesso
         String accessCheck = checkAccessPrerequisites(session, redirectAttributes);
         if (accessCheck != null) {

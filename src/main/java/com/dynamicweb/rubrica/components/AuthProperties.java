@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class AuthProperties {
 
     private final String username;
+    
     private final String password;
 
     /**

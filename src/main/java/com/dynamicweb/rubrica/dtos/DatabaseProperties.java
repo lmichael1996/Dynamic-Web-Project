@@ -1,10 +1,11 @@
 package com.dynamicweb.rubrica.dtos;
 
-import java.sql.Connection;
-import java.util.regex.Pattern;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import java.sql.Connection;
+import java.util.regex.Pattern;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
@@ -21,7 +22,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  * @author Michael Leanza
  * @since 1.0
  */
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class DatabaseProperties {
@@ -81,14 +82,18 @@ public class DatabaseProperties {
      * @param regex il pattern regex da utilizzare per la validazione del formato
      * @throws IllegalArgumentException se la validazione fallisce
      */
-    private void validateFieldFormat(String value, String fieldName, int maxLength, String regex) {
+    private void validateFieldFormat(
+        String value, 
+        String fieldName, 
+        int maxLength, 
+        String regex) {
         // Controllo lunghezza
         if (value.length() > maxLength) {
             throw new IllegalArgumentException(fieldName + " troppo lungo: massimo " + maxLength + " caratteri");
         }
         
         // Controllo pattern
-        if (!Pattern.compile(regex).matcher(value.trim()).matches()) {
+        if (!Pattern.compile(regex).matcher(value).matches()) {
             throw new IllegalArgumentException(fieldName + " non valido: " + value);
         }
     }
@@ -106,27 +111,37 @@ public class DatabaseProperties {
      * @throws IllegalArgumentException se uno o più parametri non sono validi
      */
     public void validateConfiguration() {
-        // Validazione porta
-        if (port < 1 || port > 65535) {
-            throw new IllegalArgumentException("Porta non valida: " + port);
-        }
-
-        // Validazioni unificate con controllo lunghezza e pattern
-        
         // Host (hostname/IP)
         String hostPattern = "^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)*)?" +
                 "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$|" +
                 "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
                 "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-        validateFieldFormat(host, "Host", 255, hostPattern);
+        validateFieldFormat(
+            host, 
+            "Host", 
+            255, 
+            hostPattern);
+
+        // Porta (solo controllo range)
+        if (port < 1 || port > 65535) {
+            throw new IllegalArgumentException("Porta non valida: " + port);
+        }
 
         // Nome database
-        String dbPattern = "^[a-zA-Z_][a-zA-Z0-9_]{0,63}$";
-        validateFieldFormat(dbName, "Nome database", 64, dbPattern);
+        validateFieldFormat(
+            dbName, 
+            "Nome database", 
+            64, 
+            "^[a-zA-Z_][a-zA-Z0-9_]{0,63}$"
+        );
 
         // Username
-        String usernamePattern = "^[a-zA-Z0-9_@.-]+$";
-        validateFieldFormat(username, "Username", 32, usernamePattern);
+        validateFieldFormat(
+            username, 
+            "Username", 
+            32, 
+            "^[a-zA-Z0-9_@.-]+$"
+        );
 
         // Password (solo controllo lunghezza)
         if (password.length() > 128) {
@@ -144,7 +159,7 @@ public class DatabaseProperties {
      * <p>Utilizza un timeout di 5 secondi per verificare la validità
      * della connessione, ottimale per connessioni locali Docker.</p>
      * 
-     * @throws RuntimeException se la connessione fallisce o non è valida
+     * @throws Exception se la connessione fallisce o non è valida
      */
     public void testConnection() {    
         try {
