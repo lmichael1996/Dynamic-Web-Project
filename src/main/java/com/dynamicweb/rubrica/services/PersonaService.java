@@ -72,6 +72,7 @@ public class PersonaService {
      */
     private void validatePersona(Persona persona) {
         // Validazioni complete per ogni campo (inclusi controlli null/vuoti)
+        // Campi obbligatori
         validateField(
             persona.getNome(), 
             "nome", 
@@ -93,7 +94,7 @@ public class PersonaService {
             "^(\\+39\\s?)?((3[0-9]{2}|0[0-9]{1,3})\\s?)?[0-9]{6,8}$",
             true); // obbligatorio
 
-        // Campo indirizzo opzionale
+        // Campi opzionali
         validateField(
             persona.getIndirizzo(), 
             "indirizzo", 
