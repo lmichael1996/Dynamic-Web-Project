@@ -62,6 +62,19 @@ public class PersonaService {
      * @throws IllegalArgumentException se uno o più campi non sono validi
      */
     private void validatePersona(Persona persona) {
+        // Controlli comuni per campi obbligatori (null e vuoti)
+        if (persona.getNome() == null || persona.getNome().trim().isEmpty()) {
+            throw new IllegalArgumentException("Il nome è obbligatorio");
+        }
+        
+        if (persona.getCognome() == null || persona.getCognome().trim().isEmpty()) {
+            throw new IllegalArgumentException("Il cognome è obbligatorio");
+        }
+        
+        if (persona.getTelefono() == null || persona.getTelefono().trim().isEmpty()) {
+            throw new IllegalArgumentException("Il telefono è obbligatorio");
+        }
+        
         // Validazioni complete per ogni campo
         validateField(
             persona.getNome(), 

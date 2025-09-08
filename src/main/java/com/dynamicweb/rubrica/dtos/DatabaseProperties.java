@@ -13,7 +13,10 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  * e fornisce metodi per validazione e test della connettività.
  * 
  * <p>Include validazione per hostname/IP, porta, nome database, username e password
- * secondo le regole di MySQL.</p>
+ * secondo le regole di MySQL. Supporta campi opzionali nullable come età e indirizzo.</p>
+ * 
+ * <p>La classe centralizza la costante del driver MySQL per un uso consistente
+ * in tutta l'applicazione ed evita duplicazione di codice.</p>
  * 
  * @author Michael Leanza
  * @since 1.0
@@ -23,7 +26,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @NoArgsConstructor
 public class DatabaseProperties {
     
-    /** Driver JDBC per MySQL - costante di classe */
+    /** 
+     * Driver JDBC per MySQL - costante centralizzata utilizzata in tutta l'applicazione.
+     */
     public static final String MYSQL_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
     
     /** Hostname o indirizzo IP del server MySQL */
@@ -47,8 +52,12 @@ public class DatabaseProperties {
      * <p>Genera una stringa di connessione nel formato:
      * jdbc:mysql://host:porta/database?parametri</p>
      * 
+     * <p>Include parametri ottimizzati per MySQL 8.0:
+     * - useSSL=false per connessioni locali
+     * - allowPublicKeyRetrieval=true per autenticazione
+     * - serverTimezone=UTC per gestione fuso orario</p>
+     * 
      * @return URL JDBC formattato per MySQL
-     * @throws IllegalArgumentException se la configurazione non è valida
      */
     public String buildJdbcUrl() {
         return String.format(
@@ -88,7 +97,11 @@ public class DatabaseProperties {
      * Valida tutti i parametri di configurazione del database.
      * 
      * <p>Controlla che host, porta, nome database, username e password
-     * rispettino le regole di validità per MySQL.</p>
+     * rispettino le regole di validità per MySQL 8.0. La validazione
+     * include controlli di formato, lunghezza e caratteri consentiti.</p>
+     * 
+     * <p>Supporta configurazioni per database con campi nullable come
+     * età e indirizzo nella tabella lista_contatti.</p>
      * 
      * @throws IllegalArgumentException se uno o più parametri non sono validi
      */
@@ -127,6 +140,9 @@ public class DatabaseProperties {
      * <p>Crea una connessione temporanea per verificare che i parametri
      * siano corretti e che il database sia raggiungibile. La connessione
      * viene chiusa automaticamente dopo il test.</p>
+     * 
+     * <p>Utilizza un timeout di 5 secondi per verificare la validità
+     * della connessione, ottimale per connessioni locali Docker.</p>
      * 
      * @throws RuntimeException se la connessione fallisce o non è valida
      */
