@@ -28,5 +28,5 @@ public class Persona {
     
     private String telefono;
     
-    private int eta;
+    private Integer eta;
 }

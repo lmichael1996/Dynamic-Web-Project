@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS lista_contatti (
     nome VARCHAR(100) NOT NULL,
     cognome VARCHAR(100) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
-    indirizzo VARCHAR(255),
-    eta INT NOT NULL
+    indirizzo VARCHAR(255) NULL,
+    eta INT NULL
 );

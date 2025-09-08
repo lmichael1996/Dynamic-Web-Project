@@ -86,6 +86,13 @@ public class PersonaService {
                 255, 
                 "^[a-zA-ZÀ-ÿ0-9\\s,.'-]+$");
         }
+
+        // Validazione età (opzionale)
+        if (persona.getEta() != null) {
+            if (persona.getEta() < 0 || persona.getEta() > 120) {
+                throw new IllegalArgumentException("L'età deve essere compresa tra 0 e 120 anni");
+            }
+        }
     }
 
     /**

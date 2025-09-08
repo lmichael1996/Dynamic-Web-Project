@@ -62,7 +62,7 @@
                     <div class="mb-3">
                         <label for="eta" class="form-label">Età</label>
                         <input type="number" class="form-control" id="eta" name="eta" 
-                               value="${person.eta}" required min="0" max="120">
+                               value="${person.eta}" min="0" max="120">
                     </div>
                     
                     <div class="d-flex gap-2">
