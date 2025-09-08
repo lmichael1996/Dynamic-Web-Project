@@ -2,7 +2,6 @@ package com.dynamicweb.rubrica;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Classe principale dell'applicazione Spring Boot Dynamic Web Project.
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @since 1.0
  */
 @SpringBootApplication
-@EnableTransactionManagement
 public class DynamicWebProjectApplication {
 
 	/**
