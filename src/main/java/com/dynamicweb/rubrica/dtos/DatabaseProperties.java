@@ -1,8 +1,9 @@
 package com.dynamicweb.rubrica.dtos;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+
 import java.sql.Connection;
 import java.util.regex.Pattern;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -21,7 +22,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  * @author Michael Leanza
  * @since 1.0
  */
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DatabaseProperties {
@@ -86,6 +87,11 @@ public class DatabaseProperties {
         String fieldName, 
         int maxLength, 
         String regex) {
+        // Controllo null
+        if (value == null) {
+            throw new IllegalArgumentException(fieldName + " non può essere null");
+        }
+        
         // Controllo lunghezza
         if (value.length() > maxLength) {
             throw new IllegalArgumentException(fieldName + " troppo lungo: massimo " + maxLength + " caratteri");
