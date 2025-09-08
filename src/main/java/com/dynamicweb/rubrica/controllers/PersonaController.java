@@ -184,7 +184,7 @@ public class PersonaController {
         
         try {
             if (person.getId() != null) {
-                // Update existing person
+                // Aggiorna persona esistente
                 if (personaService.updatePerson(person)) {
                     redirectAttributes.addFlashAttribute(
                         "successMessage", 
@@ -200,7 +200,7 @@ public class PersonaController {
                     return "editor";
                 }
             } else {
-                // Insert new person
+                // Inserisci nuova persona
                 if (personaService.savePerson(person)) {
                     redirectAttributes.addFlashAttribute(
                         "successMessage", 

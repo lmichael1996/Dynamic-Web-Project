@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 /**
  * Manager per la gestione dinamica delle connessioni al database.
  * Permette di aggiornare la connessione al database a runtime.
- * Si consiglia di usare questa funzionalità solo per casi particolari,
- * poiché la configurazione del DataSource dovrebbe essere gestita da Spring.
  *
  * @author Michael Leanza
  * @since 1.0

@@ -13,48 +13,44 @@
     <div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-md-4">
-                <!-- Header -->
+                <!-- Header configurazione database -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4>Database</h4>
+                    <h4>Configurazione Database</h4>
                 </div>
-                
-                <!-- Messaggi -->
+
+                <!-- Messaggio di errore -->
                 <c:if test="${not empty errorMessage}">
                     <div class="alert alert-danger">${errorMessage}</div>
                 </c:if>
 
+                <!-- Card per il modulo di configurazione database -->
                 <div class="card">
                     <div class="card-body">
                         <form:form action="${pageContext.request.contextPath}/configure" 
                                   method="post" modelAttribute="config">
                             <div class="mb-3">
                                 <label for="host" class="form-label">Host</label>
-                                <form:input type="text" class="form-control" id="host" path="host" 
-                                           value="localhost" required="true"/>
+                                <form:input type="text" class="form-control" id="host" path="host" required/>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="port" class="form-label">Porta</label>
-                                <form:input type="number" class="form-control" id="port" path="port" 
-                                           value="3306" required="true" min="1" max="65535"/>
+                                <form:input type="number" class="form-control" id="port" path="port" min="1" max="65535"/>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="dbName" class="form-label">Database</label>
-                                <form:input type="text" class="form-control" id="dbName" path="dbName" 
-                                           value="rubrica" required="true"/>
+                                <form:input type="text" class="form-control" id="dbName" path="dbName" required/>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
-                                <form:input type="text" class="form-control" id="username" path="username" 
-                                           value="rubrica" required="true"/>
+                                <form:input type="text" class="form-control" id="username" path="username" required/>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <form:input type="password" class="form-control" id="password" path="password" 
-                                           value="rubrica"/>
+                                <form:input type="password" class="form-control" id="password" path="password" required/>
                             </div>
                             
                             <button type="submit" class="btn btn-primary">Configura</button>
