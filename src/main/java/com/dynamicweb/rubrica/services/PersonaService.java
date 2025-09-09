@@ -102,7 +102,7 @@ public class PersonaService {
             "^[a-zA-ZÀ-ÿ0-9\\s,.'-]+$",
             false); // opzionale
 
-        // Validazione età (opzionale)
+        // Validazione età (solo controllo range se non null)
         if (persona.getEta() != null) {
             if (persona.getEta() < 0 || persona.getEta() > 120) {
                 throw new IllegalArgumentException("L'età deve essere compresa tra 0 e 120 anni");
@@ -183,6 +183,7 @@ public class PersonaService {
      * @throws IllegalArgumentException se l'ID non è valido
      */
     public boolean deletePerson(Long id) {
+        // Per l'eliminazione, l'ID è obbligatorio
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("ID persona non valido: " + id);
         }

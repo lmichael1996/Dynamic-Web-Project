@@ -55,11 +55,8 @@ public class DatabaseConnectionManager {
      * @return {@code true} se il database è configurato con valori validi, {@code false} altrimenti
      */
     public boolean isDatabaseConfigured() {
-        String url = dataSource.getUrl();
-        String username = dataSource.getUsername();
-        String password = dataSource.getPassword();
-        
-        // Verifica che i valori essenziali siano presenti e non nulli
-        return url != null && username != null && password != null;
+        return dataSource.getUrl() != null && 
+            dataSource.getUsername() != null && 
+            dataSource.getPassword() != null;
     }
 }
