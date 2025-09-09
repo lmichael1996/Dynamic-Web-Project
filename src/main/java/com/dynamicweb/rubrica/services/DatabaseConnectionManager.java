@@ -59,9 +59,7 @@ public class DatabaseConnectionManager {
         String username = dataSource.getUsername();
         String password = dataSource.getPassword();
         
-        // Verifica che i valori essenziali siano presenti e non vuoti
-        return url != null && !url.isEmpty() &&
-               username != null && !username.isEmpty() &&
-               password != null && !password.isEmpty();
+        // Verifica che i valori essenziali siano presenti e non nulli
+        return url != null && username != null && password != null;
     }
 }
